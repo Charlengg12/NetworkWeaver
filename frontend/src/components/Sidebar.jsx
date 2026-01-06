@@ -1,9 +1,20 @@
 import React from 'react';
-import { LayoutDashboard, Server, Settings, Shield, Activity } from 'lucide-react';
+import { LayoutDashboard, Server, Settings, Shield, Activity, LogOut } from 'lucide-react';
+import { useNavigate } from 'react-router-dom';
 import SidebarItem from './SidebarItem';
 import './Sidebar.css';
 
 const Sidebar = () => {
+    const navigate = useNavigate();
+
+    const handleLogout = () => {
+        if (window.confirm("Are you sure you want to log out?")) {
+            localStorage.removeItem('token');
+            localStorage.removeItem('user');
+            navigate('/login');
+        }
+    };
+
     return (
         <div className="sidebar">
             <div className="logo-container">
@@ -26,6 +37,9 @@ const Sidebar = () => {
                         <span className="role">Administrator</span>
                     </div>
                 </div>
+                <button onClick={handleLogout} className="logout-btn" title="Log Out">
+                    <LogOut size={20} />
+                </button>
             </div>
         </div>
     );

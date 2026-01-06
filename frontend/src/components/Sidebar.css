@@ -37,12 +37,34 @@
 .sidebar-footer {
     padding: 20px;
     border-top: 1px solid var(--border-color);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
 }
 
 .user-info {
     display: flex;
     align-items: center;
     gap: 12px;
+}
+
+.logout-btn {
+    background: transparent;
+    border: none;
+    color: var(--text-secondary);
+    cursor: pointer;
+    padding: 8px;
+    border-radius: 6px;
+    transition: all 0.2s;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.logout-btn:hover {
+    background-color: rgba(239, 68, 68, 0.1);
+    /* Red tint */
+    color: var(--danger-color);
 }
 
 .user-avatar {
