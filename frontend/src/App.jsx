@@ -1,12 +1,14 @@
 import RouterOSPage from './pages/RouterOS';
-
+import React, { useState, useEffect } from 'react';
 import { Routes, Route, Navigate, Outlet } from 'react-router-dom';
 import Sidebar from './components/Sidebar';
 import Security from './pages/Security';
 import Monitoring from './pages/Monitoring';
 import Login from './pages/Login';
 import Devices from './pages/Devices';
-import axios from 'axios';
+import { apiClient } from './services/api';
+import RouterOSDeviceList from './components/RouterOS/DeviceList';
+import './App.css'; // Global Layout Styles
 
 const ProtectedLayout = () => {
   const token = localStorage.getItem('token');
@@ -30,9 +32,9 @@ const DashboardHome = () => {
   useEffect(() => {
     const fetchStats = async () => {
       try {
-        const res = await axios.get(`${API_URL}/devices/`);
+        const res = await apiClient.get('/devices/');
         setStats({ routers: res.data.length, status: 'Healthy' });
-      } catch (err) {
+      } catch {
         setStats({ routers: '-', status: 'Backend Offline' });
       }
     };
@@ -57,6 +59,10 @@ const DashboardHome = () => {
             marginTop: '10px',
             color: stats.status === 'Healthy' ? 'var(--success-color)' : 'var(--danger-color)'
           }}>{stats.status}</p>
+        </div>
+        <div style={{ gridColumn: '1 / -1' }}>
+          <h3>Network Devices</h3>
+          <RouterOSDeviceList />
         </div>
       </div>
     </div>

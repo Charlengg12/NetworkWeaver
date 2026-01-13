@@ -68,6 +68,31 @@ const MetricsView = () => {
                     </div>
                 </div>
             )}
+
+            <div style={{ marginTop: '2rem' }}>
+                <h3>Traffic & Resources</h3>
+                <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '1rem' }}>
+                    <div className="card" style={{ padding: '0', overflow: 'hidden' }}>
+                        <iframe
+                            src="http://localhost:3001/d-solo/your-dashboard-uid/routeros-metrics?orgId=1&panelId=1"
+                            width="100%"
+                            height="300"
+                            frameBorder="0"
+                            title="Interface Traffic"
+                        ></iframe>
+                    </div>
+                    <div className="card" style={{ padding: '0', overflow: 'hidden' }}>
+                        <iframe
+                            src="http://localhost:3001/d-solo/your-dashboard-uid/routeros-metrics?orgId=1&panelId=2"
+                            width="100%"
+                            height="300"
+                            frameBorder="0"
+                            title="CPU & Memory"
+                        ></iframe>
+                    </div>
+                </div>
+                <small className="text-muted">Note: Ensure Grafana dashboards are creating and Allow Embedding is enabled.</small>
+            </div>
         </div>
     );
 };

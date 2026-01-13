@@ -1,7 +1,5 @@
 .page-container {
-    padding: 40px;
-    margin-left: 260px;
-    /* Sidebar width */
+    padding: 2rem;
     min-height: 100vh;
 }
 

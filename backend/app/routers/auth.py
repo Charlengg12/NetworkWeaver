@@ -12,7 +12,18 @@ router = APIRouter(
 @router.post("/token", response_model=schemas.Token)
 def login_for_access_token(form_data: OAuth2PasswordRequestForm = Depends(), db: Session = Depends(database.get_db)):
     user = db.query(models.User).filter(models.User.username == form_data.username).first()
+    
+    print(f"DEBUG: Login attempt for username: {form_data.username}")
+    if user:
+        print(f"DEBUG: User found in DB. ID: {user.id}, Role: {user.role}")
+        print(f"DEBUG: Stored hash prefix: {user.password_hash[:20] if user.password_hash else 'None'}")
+        verification = auth.verify_password(form_data.password, user.password_hash)
+        print(f"DEBUG: Password verification result: {verification}")
+    else:
+        print("DEBUG: User NOT found in DB")
+
     if not user or not auth.verify_password(form_data.password, user.password_hash):
+        print("DEBUG: Raising 401 Unauthorized")
         raise HTTPException(
             status_code=status.HTTP_401_UNAUTHORIZED,
             detail="Incorrect username or password",

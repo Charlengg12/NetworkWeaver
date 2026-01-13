@@ -9,6 +9,10 @@ const ConfigExecutor = () => {
     const [logs, setLogs] = useState('');
     const [loading, setLoading] = useState(false);
 
+    // New State for Templates
+    const [template, setTemplate] = useState('custom');
+    const [params, setParams] = useState({});
+
     useEffect(() => {
         apiClient.get('/devices/').then(res => setDevices(res.data));
     }, []);
@@ -18,10 +22,13 @@ const ConfigExecutor = () => {
         setLoading(true);
         try {
             // "template_name" acts as the command for this mock
+            // If template is custom, use command box. If template, use template name + params.
+            const cmdToSend = template === 'custom' ? command : `[TEMPLATE: ${template}] Params: ${JSON.stringify(params)}`;
+
             const res = await routerosAPI.executeConfig({
                 device_id: selectedDevice,
-                template_name: command,
-                params: {}
+                template_name: cmdToSend,
+                params: params
             });
             setLogs(prev => `[Success] ${new Date().toLocaleTimeString()}: ${res.data.message}\n${prev}`);
         } catch (error) {
@@ -30,6 +37,12 @@ const ConfigExecutor = () => {
             setLoading(false);
         }
     };
+
+    const templates = [
+        { id: 'basic_firewall', name: 'Basic Firewall Setup', fields: ['WAN Interface', 'LAN Interface'] },
+        { id: 'bandwidth_limit', name: 'Bandwidth Limit', fields: ['Target IP', 'Max Upload'] },
+        { id: 'custom', name: 'Custom Command', fields: [] }
+    ];
 
     return (
         <div className="card">
@@ -47,20 +60,57 @@ const ConfigExecutor = () => {
                         {devices.map(d => <option key={d.id} value={d.id}>{d.name}</option>)}
                     </select>
                 </div>
+
                 <div className="form-group">
-                    <label>Command / Template</label>
-                    <input
-                        type="text"
+                    <label>Template Selector</label>
+                    <select
                         className="form-control"
-                        value={command}
-                        onChange={e => setCommand(e.target.value)}
-                        placeholder="e.g. /system/identity/print"
-                        required
-                    />
+                        value={template}
+                        onChange={e => {
+                            setTemplate(e.target.value);
+                            setParams({});
+                        }}
+                    >
+                        {templates.map(t => <option key={t.id} value={t.id}>{t.name}</option>)}
+                    </select>
                 </div>
-                <div style={{ marginTop: '1rem' }}>
+
+                {template === 'custom' ? (
+                    <div className="form-group">
+                        <label>Command / Script</label>
+                        <input
+                            type="text"
+                            className="form-control"
+                            value={command}
+                            onChange={e => setCommand(e.target.value)}
+                            placeholder="e.g. /system/identity/print"
+                        />
+                    </div>
+                ) : (
+                    templates.find(t => t.id === template)?.fields.map(field => (
+                        <div className="form-group" key={field}>
+                            <label>{field}</label>
+                            <input
+                                type="text"
+                                className="form-control"
+                                onChange={e => setParams(prev => ({ ...prev, [field]: e.target.value }))}
+                                required
+                            />
+                        </div>
+                    ))
+                )}
+
+                <div style={{ marginTop: '1rem', display: 'flex', gap: '1rem' }}>
                     <button type="submit" className="btn btn-warning" disabled={loading || !selectedDevice}>
-                        {loading ? 'Executing...' : 'Execute Command'}
+                        {loading ? 'Deploying...' : 'Deploy'}
+                    </button>
+                    <button
+                        type="button"
+                        className="btn btn-danger"
+                        onClick={() => setLogs(prev => `[Rollback] ${new Date().toLocaleTimeString()}: Rollback initiated (Mock)\n${prev}`)}
+                        disabled={loading || !selectedDevice}
+                    >
+                        Rollback
                     </button>
                 </div>
             </form>

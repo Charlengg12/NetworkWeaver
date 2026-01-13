@@ -17,61 +17,57 @@ def deploy_configuration(request: schemas.ConfigRequest, db: Session = Depends(g
     if not device:
         raise HTTPException(status_code=404, detail="Device not found")
 
-    # 2. Prepare command based on template (Simple mapping for demo)
-    command = ""
-    action_type = request.template_name
+    # 2. Get Connection
+    from .routeros.connection import get_routeros_connection
     
-    if request.template_name == "block_website":
-        target_url = request.params.get("url")
-        # MikroTik Layer 7 Protocol + Filter Rule
-        # This is a conceptual simplification. Real implementation might need multiple commands.
-        # We will assume we are adding a simple L7 regexp.
-        command = f"/ip/firewall/layer7-protocol/add name=block_{target_url} regexp={target_url}"
-    else:
-        raise HTTPException(status_code=400, detail="Unknown template")
-
-    # 3. Connect via RouterOS API & Execute
     status = "Failed"
     details = ""
-    
+    action_type = request.template_name
+
     try:
-        # Note: In a real environment, handle connection pools and timeouts carefully
-        connection = routeros_api.RouterOsApiPool(
-            device.ip_address, 
-            username=device.username, 
-            password=device.password,
-            port=device.api_port,
-            plaintext_login=True # Depending on RouterOS version/setup
-        )
-        api = connection.get_api()
+        connection, api = get_routeros_connection(device)
         
-        # Execute the command (Using generic 'get_binary_resource' or specific paths if known)
-        # routeros_api usually works with paths like api.get_resource('/ip/address')
-        # For arbitrary commands, it's trickier. We will simulation the "add" logic for this demo.
-        
+        # 3. Execute Sequence based on diagram
         if request.template_name == "block_website":
+            target_url = request.params.get("url")
+            if not target_url:
+                raise ValueError("Parameter 'url' is required for block_website")
+
+            # A. Add Layer 7 Protocol
             l7 = api.get_resource('/ip/firewall/layer7-protocol')
-            l7.add(name=f"block_{request.params.get('url')}", regexp=f"^{request.params.get('url')}.*$")
+            # Check if exists to avoid error
+            existing = l7.get(name=f"block_{target_url}")
+            if not existing:
+                l7.add(name=f"block_{target_url}", regexp=f"^{target_url}.*$")
             
-            # Add filter rule
+            # B. Add Filter Rule
             filter_rules = api.get_resource('/ip/firewall/filter')
+            # Simple check or just add (RouterOS allows duplicates usually, but good to be clean)
             filter_rules.add(
                 chain="forward", 
                 action="drop", 
-                layer7_protocol=f"block_{request.params.get('url')}",
-                comment=f"Blocked by ConfigWeaver: {request.params.get('url')}"
+                layer7_protocol=f"block_{target_url}",
+                comment=f"Blocked by ConfigWeaver: {target_url}"
             )
+            
+            details = f"Blocked access to {target_url} (L7 + Filter Rule)"
+        
+        elif request.template_name == "basic_firewall":
+            # Just an example implementation
+            details = "Basic Firewall applied (Mock)"
+        
+        else:
+            raise ValueError(f"Unknown template: {request.template_name}")
 
         connection.disconnect()
         status = "Success"
-        details = f"Applied {request.template_name} with params {request.params}"
 
     except Exception as e:
+        status = "Failed"
         details = str(e)
-        # Log the full traceback in a real app, here just the message
         print(traceback.format_exc())
 
-    # 4. Log the action
+    # 4. Log the action (Step 7 in diagram)
     new_log = models.ConfigurationLog(
         device_id=device.id,
         action_type=action_type,
@@ -82,6 +78,12 @@ def deploy_configuration(request: schemas.ConfigRequest, db: Session = Depends(g
     db.commit()
 
     if status == "Failed":
+        # Return 500 so frontend sees the error
         raise HTTPException(status_code=500, detail=f"Configuration failed: {details}")
 
     return {"status": "Success", "message": details}
+
+@router.get("/history", response_model=list[schemas.ConfigLogResponse])
+def get_config_history(limit: int = 50, db: Session = Depends(get_db)):
+    logs = db.query(models.ConfigurationLog).order_by(models.ConfigurationLog.timestamp.desc()).limit(limit).all()
+    return logs

@@ -2,7 +2,20 @@ from fastapi import FastAPI
 from .database import engine, Base
 from .routers import configuration, auth, devices, routeros
 
-# ... existing code ...
+# Create tables (In production, use Alembic)
+Base.metadata.create_all(bind=engine)
+
+app = FastAPI(title="ConfigWeaver API")
+
+from fastapi.middleware.cors import CORSMiddleware
+
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=["*"], # In production, replace with specific origins like ["http://localhost:5173"]
+    allow_credentials=True,
+    allow_methods=["*"],
+    allow_headers=["*"],
+)
 
 app.include_router(configuration.router)
 app.include_router(auth.router)

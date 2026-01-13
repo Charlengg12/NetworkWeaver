@@ -27,7 +27,19 @@ class ConfigRequest(BaseModel):
 
 class ConfigResponse(BaseModel):
     status: str
+    status: str
     message: str
+
+class ConfigLogResponse(BaseModel):
+    log_id: int
+    device_id: int
+    timestamp: datetime
+    action_type: str
+    status: str
+    details: str
+
+    class Config:
+        orm_mode = True
 
 # Auth Schemas
 class Token(BaseModel):

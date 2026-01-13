@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import axios from 'axios';
+import { apiClient } from '../services/api';
 import { Shield, RefreshCw, CheckCircle, AlertCircle } from 'lucide-react';
 import './Security.css';
 
@@ -9,16 +9,13 @@ const Security = () => {
     const [status, setStatus] = useState({ type: '', message: '' });
     const [loading, setLoading] = useState(false);
 
-    // Fallback API URL if env var is missing
-    const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:8000';
-
     const handleDeploy = async (e) => {
         e.preventDefault();
         setLoading(true);
         setStatus({ type: '', message: '' });
 
         try {
-            const response = await axios.post(`${API_URL}/config/deploy`, {
+            const response = await apiClient.post('/config/deploy', {
                 device_id: deviceId,
                 template_name: "block_website",
                 params: { url: targetUrl }

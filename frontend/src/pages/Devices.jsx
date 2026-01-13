@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import axios from 'axios';
+import { apiClient } from '../services/api';
 import { Server, Plus, Trash2, X, Globe, User, Hash } from 'lucide-react';
 import './Devices.css';
 
@@ -16,15 +16,13 @@ const Devices = () => {
         snmp_community: 'public'
     });
 
-    const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:8000';
-
     useEffect(() => {
         fetchDevices();
     }, []);
 
     const fetchDevices = async () => {
         try {
-            const res = await axios.get(`${API_URL}/devices/`);
+            const res = await apiClient.get('/devices/');
             setDevices(res.data);
         } catch (err) {
             console.error("Failed to fetch devices", err);
@@ -44,7 +42,7 @@ const Devices = () => {
     const handleSubmit = async (e) => {
         e.preventDefault();
         try {
-            await axios.post(`${API_URL}/devices/`, formData);
+            await apiClient.post('/devices/', formData);
             setShowAddModal(false);
             setFormData({
                 name: '',
@@ -64,7 +62,7 @@ const Devices = () => {
     const handleDelete = async (id) => {
         if (!window.confirm("Are you sure you want to delete this device?")) return;
         try {
-            await axios.delete(`${API_URL}/devices/${id}`);
+            await apiClient.delete(`/devices/${id}`);
             fetchDevices();
         } catch (err) {
             console.error("Failed to delete device", err);
