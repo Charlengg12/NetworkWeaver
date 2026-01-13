@@ -27,6 +27,7 @@ const Sidebar = () => {
                 <SidebarItem icon={Activity} label="Monitoring" to="/monitoring" />
                 <SidebarItem icon={Shield} label="Security Policies" to="/security" />
                 <SidebarItem icon={Settings} label="Devices" to="/devices" />
+                <SidebarItem icon={Activity} label="RouterOS" to="/routeros" />
             </nav>
 
             <div className="sidebar-footer">

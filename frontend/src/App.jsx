@@ -1,4 +1,5 @@
-import React, { useState, useEffect } from 'react';
+import RouterOSPage from './pages/RouterOS';
+
 import { Routes, Route, Navigate, Outlet } from 'react-router-dom';
 import Sidebar from './components/Sidebar';
 import Security from './pages/Security';
@@ -72,6 +73,7 @@ function App() {
         <Route path="/security" element={<Security />} />
         <Route path="/monitoring" element={<Monitoring />} />
         <Route path="/devices" element={<Devices />} />
+        <Route path="/routeros" element={<RouterOSPage />} />
       </Route>
     </Routes>
   );

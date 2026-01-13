@@ -107,9 +107,49 @@ services:
       - configweaver-net
     restart: unless-stopped
 
+  # RouterOS Services (Isolated)
+  routeros-postgres:
+    image: postgres:15
+    container_name: routeros_postgres
+    environment:
+      POSTGRES_DB: routeros_db
+      POSTGRES_USER: user
+      POSTGRES_PASSWORD: password
+    ports:
+      - "5433:5432"
+    networks:
+      - configweaver-net
+    volumes:
+      - routeros_postgres_data:/var/lib/postgresql/data
+
+  routeros-prometheus:
+    image: prom/prometheus:latest
+    container_name: routeros_prometheus
+    ports:
+      - "9091:9090"
+    networks:
+      - configweaver-net
+    volumes:
+      - routeros_prometheus_data:/prometheus
+
+  routeros-grafana:
+    image: grafana/grafana:latest
+    container_name: routeros_grafana
+    ports:
+      - "3001:3000"
+    networks:
+      - configweaver-net
+    depends_on:
+      - routeros-prometheus
+    volumes:
+      - routeros_grafana_data:/var/lib/grafana
+
 networks:
   configweaver-net:
     driver: bridge
 
 volumes:
   postgres_data:
+  routeros_postgres_data:
+  routeros_prometheus_data:
+  routeros_grafana_data:
