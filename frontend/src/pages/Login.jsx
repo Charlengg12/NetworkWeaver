@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
 import { Lock, User } from 'lucide-react';
+import logo from '../assets/logo.jpg';
 import './Login.css';
 
 const Login = () => {
@@ -37,8 +38,8 @@ const Login = () => {
         <div className="login-container">
             <div className="login-card">
                 <div className="login-header">
-                    <div className="logo-icon-large">
-                        <Lock size={32} />
+                    <div className="logo-icon-large" style={{ background: 'transparent', borderRadius: '0' }}>
+                        <img src={logo} alt="NetworkWeaver" style={{ width: '100%', height: '100%', objectFit: 'contain', borderRadius: '12px' }} />
                     </div>
                     <h1>Welcome Back</h1>
                     <p>Sign in to NetworkWeaver</p>

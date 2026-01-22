@@ -1,0 +1,15 @@
+# Python Requirements for GNS3 Automation Scripts
+# Install with: pip install -r requirements.txt
+
+# Core dependencies
+requests>=2.31.0
+routeros-api>=0.17.0
+
+# SNMP support
+pysnmp>=4.4.12
+
+# Optional: Enhanced CLI output
+colorama>=0.4.6
+
+# Optional: Progress bars
+tqdm>=4.66.0

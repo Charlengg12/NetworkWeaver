@@ -1,5 +1,6 @@
 import RouterOSPage from './pages/RouterOS';
 import React, { useState, useEffect } from 'react';
+import { Activity, BarChart } from 'lucide-react';
 import { Routes, Route, Navigate, Outlet } from 'react-router-dom';
 import Sidebar from './components/Sidebar';
 import Security from './pages/Security';
@@ -63,6 +64,27 @@ const DashboardHome = () => {
         <div style={{ gridColumn: '1 / -1' }}>
           <h3>Network Devices</h3>
           <RouterOSDeviceList />
+        </div>
+
+        <div style={{ gridColumn: '1 / -1' }}>
+          <h3>Quick Links</h3>
+          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(200px, 1fr))', gap: '1rem', marginTop: '1rem' }}>
+            {/* NetworkWeaver Tools */}
+            <a href="http://localhost:3000" target="_blank" rel="noopener noreferrer" className="btn-primary" style={{ textDecoration: 'none', background: 'var(--accent-cyan)', color: '#000', fontWeight: 'bold' }}>
+              <Activity size={18} /> NW Grafana
+            </a>
+            <a href="http://localhost:9090" target="_blank" rel="noopener noreferrer" className="btn-primary" style={{ textDecoration: 'none', background: 'var(--bg-tertiary)', border: '1px solid var(--accent-cyan)', color: 'var(--accent-cyan)' }}>
+              <Activity size={18} /> NW Prometheus
+            </a>
+
+            {/* RouterOS Tools */}
+            <a href="http://localhost:3001" target="_blank" rel="noopener noreferrer" className="btn-primary" style={{ textDecoration: 'none', background: 'var(--accent-purple)', color: '#fff', fontWeight: 'bold' }}>
+              <BarChart size={18} /> ROS Grafana
+            </a>
+            <a href="http://localhost:9091" target="_blank" rel="noopener noreferrer" className="btn-primary" style={{ textDecoration: 'none', background: 'var(--bg-tertiary)', border: '1px solid var(--accent-purple)', color: 'var(--accent-purple)' }}>
+              <Activity size={18} /> ROS Prometheus
+            </a>
+          </div>
         </div>
       </div>
     </div>

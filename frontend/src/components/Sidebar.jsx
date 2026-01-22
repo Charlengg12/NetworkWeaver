@@ -2,6 +2,7 @@ import React from 'react';
 import { LayoutDashboard, Server, Settings, Shield, Activity, LogOut, Cpu } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 import SidebarItem from './SidebarItem';
+import logo from '../assets/logo.jpg';
 import './Sidebar.css';
 
 const Sidebar = () => {
@@ -18,7 +19,7 @@ const Sidebar = () => {
     return (
         <div className="sidebar">
             <div className="logo-container">
-                <Cpu size={32} className="app-logo" />
+                <img src={logo} alt="NetworkWeaver" className="app-logo" style={{ width: '32px', height: '32px', borderRadius: '6px' }} />
                 <h1 className="app-title">NetworkWeaver</h1>
             </div>
 

@@ -1,6 +1,6 @@
 from fastapi import FastAPI
 from .database import engine, Base
-from .routers import configuration, auth, devices, routeros
+from .routers import configuration, auth, devices, routeros, monitoring
 
 # Create tables (In production, use Alembic)
 Base.metadata.create_all(bind=engine)
@@ -21,6 +21,7 @@ app.include_router(configuration.router)
 app.include_router(auth.router)
 app.include_router(devices.router)
 app.include_router(routeros.router)
+app.include_router(monitoring.router)
 
 @app.get("/")
 def read_root():

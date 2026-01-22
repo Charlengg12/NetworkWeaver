@@ -1,0 +1,75 @@
+# SNMP Exporter Configuration for MikroTik RouterOS
+# Place this file in: monitoring/snmp-mikrotik.yml
+
+# MikroTik module configuration
+mikrotik:
+  version: 2
+  auth:
+    community: public
+  walk:
+    # System information
+    - 1.3.6.1.2.1.1                    # SNMPv2-MIB::system
+    
+    # Interfaces
+    - 1.3.6.1.2.1.2.2.1                # IF-MIB::ifTable
+    - 1.3.6.1.2.1.31.1.1               # IF-MIB::ifXTable
+    
+    # IP statistics
+    - 1.3.6.1.2.1.4                    # IP-MIB
+    
+    # ICMP statistics
+    - 1.3.6.1.2.1.5                    # ICMP-MIB
+    
+    # TCP statistics
+    - 1.3.6.1.2.1.6                    # TCP-MIB
+    
+    # UDP statistics
+    - 1.3.6.1.2.1.7                    # UDP-MIB
+    
+    # MikroTik Enterprise MIB
+    - 1.3.6.1.4.1.14988.1              # MIKROTIK-MIB
+    
+  lookups:
+    - source_indexes: [ifIndex]
+      lookup: ifName
+      drop_source_indexes: false
+    - source_indexes: [ifIndex]
+      lookup: ifDescr
+      drop_source_indexes: false
+      
+  overrides:
+    ifName:
+      ignore: true
+    ifDescr:
+      ignore: true
+    ifType:
+      type: EnumAsInfo
+    ifOperStatus:
+      type: EnumAsStateSet
+    ifAdminStatus:
+      type: EnumAsStateSet
+
+  metric_name_format: "snmp_{module}_{name}"
+
+# Additional module for detailed interface monitoring
+mikrotik_interfaces:
+  version: 2
+  auth:
+    community: public
+  walk:
+    - 1.3.6.1.2.1.2.2.1.1              # ifIndex
+    - 1.3.6.1.2.1.2.2.1.2              # ifDescr
+    - 1.3.6.1.2.1.2.2.1.3              # ifType
+    - 1.3.6.1.2.1.2.2.1.5              # ifSpeed
+    - 1.3.6.1.2.1.2.2.1.7              # ifAdminStatus
+    - 1.3.6.1.2.1.2.2.1.8              # ifOperStatus
+    - 1.3.6.1.2.1.2.2.1.10             # ifInOctets
+    - 1.3.6.1.2.1.2.2.1.11             # ifInUcastPkts
+    - 1.3.6.1.2.1.2.2.1.13             # ifInDiscards
+    - 1.3.6.1.2.1.2.2.1.14             # ifInErrors
+    - 1.3.6.1.2.1.2.2.1.16             # ifOutOctets
+    - 1.3.6.1.2.1.2.2.1.17             # ifOutUcastPkts
+    - 1.3.6.1.2.1.2.2.1.19             # ifOutDiscards
+    - 1.3.6.1.2.1.2.2.1.20             # ifOutErrors
+    - 1.3.6.1.2.1.31.1.1.1.6           # ifHCInOctets (64-bit counters)
+    - 1.3.6.1.2.1.31.1.1.1.10          # ifHCOutOctets (64-bit counters)

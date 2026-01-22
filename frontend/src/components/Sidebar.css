@@ -24,8 +24,8 @@
 }
 
 .app-logo {
-    color: var(--accent-cyan);
-    filter: drop-shadow(0 0 8px rgba(0, 229, 255, 0.5));
+    /* No filter for image logo */
+    object-fit: contain;
 }
 
 .app-title {

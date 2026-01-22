@@ -7,9 +7,10 @@ scrape_configs:
       - targets: ['localhost:9090']
 
   - job_name: 'snmp'
-    static_configs:
-      - targets:
-        - 192.168.1.1  # SNMP device target (example)
+    scrape_interval: 15s
+    scrape_timeout: 10s
+    http_sd_configs:
+      - url: 'http://backend:8000/monitoring/targets'
     metrics_path: /snmp
     params:
       module: [if_mib]
