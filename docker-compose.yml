@@ -80,18 +80,21 @@ services:
   snmp-exporter:
     image: prom/snmp-exporter
     container_name: networkweaver-snmp-exporter
-    network_mode: service:wireguard
-    restart: always
-    # SNMP Simulator (for local testing without physical router)
+    # network_mode: service:wireguard  <-- Commented out to test local access
+    networks:
+      - networkweaver-net
+    ports:
+      - "9116:9116"
+    extra_hosts:
+      - "host.docker.internal:host-gateway"
+
+  # SNMP Simulator (reliable Docker-based target)
   snmp-simulator:
     image: tandrup/snmpsim
     container_name: networkweaver-snmp-simulator
-    ports:
-      - "1161:161/udp"
     networks:
       - networkweaver-net
     restart: unless-stopped
-    # VPN Connectivity
   wireguard:
     image: linuxserver/wireguard:latest
     container_name: networkweaver-wireguard
