@@ -9,7 +9,7 @@ scrape_configs:
   # SNMP Monitoring (Docker Simulator)
   - job_name: 'snmp-devices'
     scrape_interval: 15s
-    scrape_timeout: 10s
+    scrape_timeout: 15s  # Increased timeout to prevent premature timeouts
     static_configs:
       - targets:
         - snmp-simulator:161  # Docker SNMP Simulator
@@ -30,7 +30,7 @@ scrape_configs:
   # Keep backend service discovery for future dynamic targets
   - job_name: 'snmp-dynamic'
     scrape_interval: 15s
-    scrape_timeout: 10s
+    scrape_timeout: 15s  # Increased timeout to prevent premature timeouts
     http_sd_configs:
       - url: 'http://backend:8000/monitoring/targets'
     metrics_path: /snmp
