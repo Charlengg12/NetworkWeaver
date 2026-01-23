@@ -1,0 +1,7 @@
+# 1. Enable SNMP Service
+/snmp set enabled=yes trap-version=2
+
+# 2. Configure the "public" community string (used by NetworkWeaver)
+# This allows read-access from any IP (0.0.0.0/0). 
+# For better security, you can replace 0.0.0.0/0 with your WireGuard VPN IP (e.g., 10.13.13.1/32).
+/snmp community set [find name=public] addresses=0.0.0.0/0 read-access=yes
