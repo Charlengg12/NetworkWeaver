@@ -32,15 +32,26 @@ const DashboardHome = () => {
   const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:8000';
 
   useEffect(() => {
+    const abortController = new AbortController();
+
     const fetchStats = async () => {
       try {
-        const res = await apiClient.get('/devices/');
+        const res = await apiClient.get('/devices/', { signal: abortController.signal });
         setStats({ routers: res.data.length, status: 'Healthy' });
-      } catch {
+      } catch (err) {
+        // Ignore abort errors
+        if (err.name === 'AbortError' || err.name === 'CanceledError') {
+          return;
+        }
         setStats({ routers: '-', status: 'Backend Offline' });
       }
     };
+
     fetchStats();
+
+    return () => {
+      abortController.abort();
+    };
   }, []);
 
   return (

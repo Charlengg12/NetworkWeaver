@@ -79,7 +79,7 @@ add name=www.facebook.com address=0.0.0.0
 **Windows (PowerShell):**
 ```powershell
 # Navigate to project directory
-cd C:\Users\Ronald\Desktop\NetworkWeaver\ConfigWeaver
+cd C:\Users\Admin\Desktop\NetworkWeaver\NetworkWeaver
 
 # Start all services
 docker compose up --build -d
@@ -91,7 +91,7 @@ docker compose logs -f
 **Linux/Mac (Bash):**
 ```bash
 #!/bin/bash
-cd ~/NetworkWeaver/ConfigWeaver
+cd ~/NetworkWeaver/NetworkWeaver
 docker compose up --build -d
 docker compose logs -f
 ```

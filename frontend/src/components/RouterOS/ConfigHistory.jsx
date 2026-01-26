@@ -7,21 +7,31 @@ const ConfigHistory = () => {
     const [loading, setLoading] = useState(true);
 
     useEffect(() => {
+        const abortController = new AbortController();
+
+        const fetchHistory = async () => {
+            try {
+                const res = await apiClient.get('/config/history', { signal: abortController.signal });
+                setLogs(res.data);
+            } catch (error) {
+                // Ignore abort errors
+                if (error.name === 'AbortError' || error.name === 'CanceledError') {
+                    return;
+                }
+                console.error("Failed to fetch history", error);
+            } finally {
+                setLoading(false);
+            }
+        };
+
         fetchHistory();
         const interval = setInterval(fetchHistory, 5000); // Auto-refresh
-        return () => clearInterval(interval);
-    }, []);
 
-    const fetchHistory = async () => {
-        try {
-            const res = await apiClient.get('/config/history');
-            setLogs(res.data);
-        } catch (error) {
-            console.error("Failed to fetch history", error);
-        } finally {
-            setLoading(false);
-        }
-    };
+        return () => {
+            clearInterval(interval);
+            abortController.abort();
+        };
+    }, []);
 
     return (
         <div className="card">

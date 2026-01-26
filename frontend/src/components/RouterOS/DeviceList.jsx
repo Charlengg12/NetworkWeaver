@@ -10,19 +10,29 @@ const RouterOSDeviceList = () => {
     const [testResults, setTestResults] = useState({});
 
     useEffect(() => {
-        fetchDevices();
-    }, []);
+        const abortController = new AbortController();
 
-    const fetchDevices = async () => {
-        try {
-            const res = await apiClient.get('/devices/'); // Standard CRUD endpoint
-            setDevices(res.data);
-        } catch (error) {
-            console.error("Failed to fetch devices", error);
-        } finally {
-            setLoading(false);
-        }
-    };
+        const fetchDevices = async () => {
+            try {
+                const res = await apiClient.get('/devices/', { signal: abortController.signal });
+                setDevices(res.data);
+            } catch (error) {
+                // Ignore abort errors
+                if (error.name === 'AbortError' || error.name === 'CanceledError') {
+                    return;
+                }
+                console.error("Failed to fetch devices", error);
+            } finally {
+                setLoading(false);
+            }
+        };
+
+        fetchDevices();
+
+        return () => {
+            abortController.abort();
+        };
+    }, []);
 
     const handleTestConnection = async (id) => {
         setTestingId(id);

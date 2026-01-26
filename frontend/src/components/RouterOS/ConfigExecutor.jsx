@@ -15,7 +15,21 @@ const ConfigExecutor = () => {
     const [params, setParams] = useState({});
 
     useEffect(() => {
-        apiClient.get('/devices/').then(res => setDevices(res.data));
+        const abortController = new AbortController();
+
+        apiClient.get('/devices/', { signal: abortController.signal })
+            .then(res => setDevices(res.data))
+            .catch(err => {
+                // Ignore abort errors
+                if (err.name === 'AbortError' || err.name === 'CanceledError') {
+                    return;
+                }
+                console.error("Failed to fetch devices", err);
+            });
+
+        return () => {
+            abortController.abort();
+        };
     }, []);
 
     const handleExecute = async (e) => {

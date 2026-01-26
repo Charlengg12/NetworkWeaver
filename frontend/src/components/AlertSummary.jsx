@@ -8,9 +8,9 @@ const AlertSummary = () => {
     const [loading, setLoading] = useState(true);
     const [lastUpdated, setLastUpdated] = useState(null);
 
-    const fetchAlerts = async () => {
+    const fetchAlerts = async (signal) => {
         try {
-            const res = await apiClient.get('/monitoring/status');
+            const res = await apiClient.get('/monitoring/status', { signal });
             const devices = res.data;
             const upCount = devices.filter(d => d.status === 'UP').length;
             const downCount = devices.filter(d => d.status === 'DOWN').length;
@@ -22,6 +22,10 @@ const AlertSummary = () => {
             });
             setLastUpdated(new Date());
         } catch (err) {
+            // Ignore abort errors
+            if (err.name === 'AbortError' || err.name === 'CanceledError') {
+                return;
+            }
             console.error("Failed to fetch alerts", err);
         } finally {
             setLoading(false);
@@ -29,9 +33,17 @@ const AlertSummary = () => {
     };
 
     useEffect(() => {
-        fetchAlerts();
-        const interval = setInterval(fetchAlerts, 30000); // Refresh every 30 seconds
-        return () => clearInterval(interval);
+        const abortController = new AbortController();
+
+        fetchAlerts(abortController.signal);
+        const interval = setInterval(() => {
+            fetchAlerts(abortController.signal);
+        }, 30000); // Refresh every 30 seconds
+
+        return () => {
+            clearInterval(interval);
+            abortController.abort(); // Cancel any pending requests
+        };
     }, []);
 
     if (loading) {

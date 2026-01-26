@@ -11,19 +11,29 @@ const Sidebar = () => {
     const [alertCount, setAlertCount] = useState(0);
 
     useEffect(() => {
+        const abortController = new AbortController();
+
         const fetchAlerts = async () => {
             try {
-                const res = await apiClient.get('/monitoring/status');
+                const res = await apiClient.get('/monitoring/status', { signal: abortController.signal });
                 const downCount = res.data.filter(d => d.status === 'DOWN').length;
                 setAlertCount(downCount);
             } catch (err) {
+                // Ignore abort errors
+                if (err.name === 'AbortError' || err.name === 'CanceledError') {
+                    return;
+                }
                 console.error("Failed to fetch alerts", err);
             }
         };
 
         fetchAlerts();
         const interval = setInterval(fetchAlerts, 30000);
-        return () => clearInterval(interval);
+
+        return () => {
+            clearInterval(interval);
+            abortController.abort();
+        };
     }, []);
 
     const handleLogout = () => {
