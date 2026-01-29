@@ -1,7 +1,7 @@
 /* RouterOS Tab Styles */
 .tabs-container {
     background-color: transparent;
-    border-radius: 12px;
+    border-radius: var(--radius-lg);
     overflow: hidden;
 }
 
@@ -9,7 +9,7 @@
     display: flex;
     gap: 1.5rem;
     margin-bottom: 2.5rem;
-    border-bottom: 1px solid var(--glass-border);
+    border-bottom: 1px solid var(--border-color);
 }
 
 .tab-btn {
@@ -18,7 +18,7 @@
     padding: 0.75rem 0.25rem;
     font-size: 0.925rem;
     font-weight: 500;
-    color: var(--text-secondary);
+    color: var(--text-muted);
     cursor: pointer;
     border-bottom: 2px solid transparent;
     transition: all 0.2s;
@@ -27,12 +27,11 @@
 
 .tab-btn:hover {
     color: var(--text-primary);
-    /* Subtle hover bg */
 }
 
 .tab-btn.active {
-    color: var(--accent-color);
-    border-bottom-color: var(--accent-color);
+    color: var(--primary);
+    border-bottom-color: var(--primary);
     font-weight: 600;
 }
 

@@ -62,8 +62,8 @@ const RouterOSDeviceList = () => {
     if (loading) return <div>Loading devices...</div>;
 
     return (
-        <div className="card">
-            <h2>RouterOS Devices</h2>
+        <div className="card" style={{ marginTop: '0.5rem' }}>
+            <h2 style={{ margin: '0 0 0.75rem 0', fontSize: '1.1rem' }}>RouterOS Devices</h2>
             <div className="table-responsive">
                 <table className="table">
                     <thead>

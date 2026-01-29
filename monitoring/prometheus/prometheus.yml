@@ -6,16 +6,16 @@ scrape_configs:
     static_configs:
       - targets: ['localhost:9090']
 
-  # SNMP Monitoring (Docker Simulator)
+  # SNMP Monitoring (Real MikroTik Device)
   - job_name: 'snmp-devices'
     scrape_interval: 15s
-    scrape_timeout: 15s  # Increased timeout to prevent premature timeouts
+    scrape_timeout: 10s
     static_configs:
       - targets:
-        - snmp-simulator:161  # Docker SNMP Simulator
+        - 192.168.137.61:161  # Real MikroTik Router
         labels:
-          device_type: 'simulator'
-          location: 'docker'
+          device_type: 'mikrotik'
+          location: 'network'
     metrics_path: /snmp
     params:
       module: [if_mib]
@@ -29,8 +29,8 @@ scrape_configs:
 
   # Keep backend service discovery for future dynamic targets
   - job_name: 'snmp-dynamic'
-    scrape_interval: 15s
-    scrape_timeout: 15s  # Increased timeout to prevent premature timeouts
+    scrape_interval: 30s
+    scrape_timeout: 10s  # Reduced to 2s for fast-fail
     http_sd_configs:
       - url: 'http://backend:8000/monitoring/targets'
     metrics_path: /snmp
@@ -45,11 +45,21 @@ scrape_configs:
         replacement: networkweaver-snmp-exporter:9116
 
   # Windows Exporter - Laptop monitoring
-  - job_name: 'windows-exporter'
-    scrape_interval: 15s
-    static_configs:
-      - targets: ['192.168.68.107:9182']
-        labels:
-          hostname: 'Laptop-Router'
-          device_type: 'windows'
+  # Windows Exporter - Laptop monitoring (Disabled - Connection Refused)
+  # - job_name: 'windows-exporter'
+  #   scrape_interval: 15s
+  #   static_configs:
+  #     - targets: ['192.168.68.107:9182']
+  #       labels:
+  #         hostname: 'Laptop-Router'
+  #         device_type: 'windows'
 
+  # RouterOS API Metrics (via Backend)
+  - job_name: 'routeros-api'
+    scrape_interval: 15s
+    scrape_timeout: 10s
+    static_configs:
+      - targets: ['backend:8000']
+        labels:
+          source: 'routeros-api'
+    metrics_path: /metrics

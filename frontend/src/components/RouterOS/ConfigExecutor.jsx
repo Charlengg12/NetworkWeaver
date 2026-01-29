@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { routerosAPI } from '../../services/routeros/api';
 import { apiClient } from '../../services/api';
-import { Terminal, Play, RotateCcw, Box, Hash, ChevronRight, Zap } from 'lucide-react';
+import { Terminal, Play, RotateCcw, Box, Hash, ChevronRight, Zap, RefreshCw } from 'lucide-react';
 
 const ConfigExecutor = () => {
     const [devices, setDevices] = useState([]);
@@ -20,10 +20,7 @@ const ConfigExecutor = () => {
         apiClient.get('/devices/', { signal: abortController.signal })
             .then(res => setDevices(res.data))
             .catch(err => {
-                // Ignore abort errors
-                if (err.name === 'AbortError' || err.name === 'CanceledError') {
-                    return;
-                }
+                if (err.name === 'AbortError' || err.name === 'CanceledError') return;
                 console.error("Failed to fetch devices", err);
             });
 
@@ -36,14 +33,11 @@ const ConfigExecutor = () => {
         e.preventDefault();
         setLoading(true);
         try {
-            // "template_name" acts as the command for this mock
-            // If template is custom, use command box. If template, use template name + params.
-            const cmdToSend = template === 'custom' ? command : `[TEMPLATE: ${template}] Params: ${JSON.stringify(params)}`;
-
-            const res = await routerosAPI.executeConfig({
-                device_id: selectedDevice,
-                template_name: cmdToSend,
-                params: params
+            // Use /config/deploy endpoint for all templates
+            const res = await apiClient.post('/config/deploy', {
+                device_id: parseInt(selectedDevice),
+                template_name: template,
+                params: template === 'custom' ? { command: command } : params
             });
             setLogs(prev => `[Success] ${new Date().toLocaleTimeString()}: ${res.data.message}\n${prev}`);
         } catch (error) {
@@ -55,24 +49,30 @@ const ConfigExecutor = () => {
 
     const templates = [
         { id: 'basic_firewall', name: 'Basic Firewall Setup', fields: ['WAN Interface', 'LAN Interface'] },
-        { id: 'bandwidth_limit', name: 'Bandwidth Limit', fields: ['Target IP', 'Max Upload'] },
+        { id: 'bandwidth_limit', name: 'Bandwidth Limit', fields: ['Target IP', 'Max Upload', 'Max Download'] },
+        { id: 'guest_network', name: 'Guest Network', fields: ['SSID', 'Gateway IP', 'DHCP Range'] },
+        { id: 'port_forwarding', name: 'Port Forwarding', fields: ['Protocol', 'External Port', 'Internal IP', 'Internal Port'] },
+        { id: 'block_website', name: 'Block Website', fields: ['URL'] },
+        { id: 'vpn_setup', name: 'VPN Setup (PPTP)', fields: ['Username', 'Password'] },
+        { id: 'mac_filtering', name: 'MAC Filtering', fields: ['MAC Address', 'Action'] },
+        { id: 'auto_backup', name: 'Auto-Backup', fields: ['Backup Name'] },
         { id: 'custom', name: 'Custom Command', fields: [] }
     ];
 
     return (
         <div className="config-executor-container fade-in">
-            <header style={{ marginBottom: '2rem' }}>
-                <h2 style={{ fontSize: '1.75rem', fontWeight: '700', marginBottom: '0.25rem' }}>Configuration Studio</h2>
-                <p style={{ color: 'var(--text-secondary)' }}>Deploy scripts and manage device configurations</p>
+            <header className="page-header" style={{ border: 'none', paddingBottom: 0 }}>
+                <h2 className="section-title">Configuration Studio</h2>
+                <p className="page-subtitle">Deploy scripts and manage device configurations</p>
             </header>
 
-            <div style={{ display: 'grid', gridTemplateColumns: '1fr 1.5fr', gap: '2rem' }}>
+            <div className="executor-grid">
                 <div className="controls-section">
-                    <div className="card" style={{ padding: '1.5rem' }}>
+                    <div className="card">
                         <form onSubmit={handleExecute}>
-                            <div className="form-group" style={{ marginBottom: '1.25rem' }}>
-                                <label style={{ display: 'block', fontSize: '0.75rem', fontWeight: '600', color: 'var(--text-secondary)', textTransform: 'uppercase', letterSpacing: '0.05em', marginBottom: '0.5rem' }}>
-                                    <Box size={14} style={{ marginRight: '6px', verticalAlign: 'middle' }} /> Target Device
+                            <div className="form-group">
+                                <label className="input-label">
+                                    <Box size={14} /> Target Device
                                 </label>
                                 <select
                                     className="input-field"
@@ -85,9 +85,9 @@ const ConfigExecutor = () => {
                                 </select>
                             </div>
 
-                            <div className="form-group" style={{ marginBottom: '1.25rem' }}>
-                                <label style={{ display: 'block', fontSize: '0.75rem', fontWeight: '600', color: 'var(--text-secondary)', textTransform: 'uppercase', letterSpacing: '0.05em', marginBottom: '0.5rem' }}>
-                                    <Hash size={14} style={{ marginRight: '6px', verticalAlign: 'middle' }} /> Template
+                            <div className="form-group">
+                                <label className="input-label">
+                                    <Hash size={14} /> Template
                                 </label>
                                 <select
                                     className="input-field"
@@ -102,24 +102,24 @@ const ConfigExecutor = () => {
                             </div>
 
                             {template === 'custom' ? (
-                                <div className="form-group" style={{ marginBottom: '1.5rem' }}>
-                                    <label style={{ display: 'block', fontSize: '0.75rem', fontWeight: '600', color: 'var(--text-secondary)', textTransform: 'uppercase', letterSpacing: '0.05em', marginBottom: '0.5rem' }}>
-                                        <ChevronRight size={14} style={{ marginRight: '6px', verticalAlign: 'middle' }} /> Command / Script
+                                <div className="form-group">
+                                    <label className="input-label">
+                                        <ChevronRight size={14} /> Command / Script
                                     </label>
                                     <textarea
                                         className="input-field"
                                         value={command}
                                         onChange={e => setCommand(e.target.value)}
                                         placeholder="/system/identity/print"
-                                        rows="3"
-                                        style={{ fontFamily: 'monospace', resize: 'vertical' }}
+                                        rows="5"
+                                        style={{ fontFamily: 'var(--font-mono)' }}
                                     />
                                 </div>
                             ) : (
-                                <div className="template-fields" style={{ marginBottom: '1.5rem' }}>
+                                <div className="template-fields">
                                     {templates.find(t => t.id === template)?.fields.map(field => (
-                                        <div className="form-group" key={field} style={{ marginBottom: '1rem' }}>
-                                            <label style={{ display: 'block', fontSize: '0.75rem', color: 'var(--text-secondary)', marginBottom: '0.4rem' }}>{field}</label>
+                                        <div className="form-group" key={field}>
+                                            <label className="input-label">{field}</label>
                                             <input
                                                 type="text"
                                                 className="input-field"
@@ -131,15 +131,14 @@ const ConfigExecutor = () => {
                                 </div>
                             )}
 
-                            <div style={{ display: 'flex', gap: '0.75rem' }}>
-                                <button type="submit" className="btn-primary" style={{ flex: 1 }} disabled={loading || !selectedDevice}>
-                                    {loading ? <Zap className="spin" size={18} /> : <Play size={18} />}
-                                    {loading ? 'Deploying...' : 'Deploy Now'}
+                            <div className="action-row">
+                                <button type="submit" className="btn-primary" disabled={loading || !selectedDevice}>
+                                    {loading ? <RefreshCw className="spin" size={18} /> : <Play size={18} />}
+                                    {loading ? 'Executing...' : 'Run Configuration'}
                                 </button>
                                 <button
                                     type="button"
-                                    className="btn-text"
-                                    style={{ padding: '0.6rem 1rem', borderRadius: '8px', background: 'rgba(239, 68, 68, 0.1)', color: 'var(--danger-color)', display: 'flex', alignItems: 'center', gap: '0.5rem', fontSize: '0.9rem' }}
+                                    className="btn-secondary rollback-btn"
                                     onClick={() => setLogs(prev => `[Rollback] ${new Date().toLocaleTimeString()}: Manual rollback initiated\n${prev}`)}
                                     disabled={loading || !selectedDevice}
                                 >
@@ -151,31 +150,149 @@ const ConfigExecutor = () => {
                 </div>
 
                 <div className="log-section">
-                    <div className="card" style={{ height: '100%', display: 'flex', flexDirection: 'column', padding: '0', overflow: 'hidden', border: '1px solid var(--glass-border)' }}>
-                        <header style={{ padding: '0.75rem 1.25rem', background: 'rgba(255,255,255,0.02)', borderBottom: '1px solid var(--glass-border)', display: 'flex', alignItems: 'center', gap: '0.75rem' }}>
-                            <Terminal size={16} color="var(--text-secondary)" />
-                            <span style={{ fontSize: '0.75rem', fontWeight: '600', color: 'var(--text-secondary)', textTransform: 'uppercase', letterSpacing: '0.05em' }}>Execution Log</span>
+                    <div className="card log-card">
+                        <header className="log-header">
+                            <Terminal size={16} />
+                            <span>Execution Log</span>
                         </header>
-                        <div style={{ flex: 1, padding: '1.25rem', background: '#000', fontFamily: '"Fira Code", "SauceCodePro Nerd Font", monospace', fontSize: '0.85rem', color: '#a1a1aa', overflowY: 'auto' }}>
+                        <div className="log-content">
                             {logs ? (
                                 logs.split('\n').map((line, i) => (
-                                    <div key={i} style={{ marginBottom: '0.25rem', display: 'flex', gap: '0.5rem' }}>
-                                        <span style={{ color: 'var(--text-secondary)', opacity: 0.5 }}>{i + 1}</span>
-                                        <span style={{ color: line.includes('[Success]') ? '#10b981' : line.includes('[Error]') ? '#ef4444' : line.includes('[Rollback]') ? '#f59e0b' : 'inherit' }}>
+                                    <div key={i} className="log-line">
+                                        <span className="line-num">{i + 1}</span>
+                                        <span className={
+                                            line.includes('[Success]') ? 'text-success' :
+                                                line.includes('[Error]') ? 'text-danger' :
+                                                    line.includes('[Rollback]') ? 'text-warning' : ''
+                                        }>
                                             {line}
                                         </span>
                                     </div>
                                 ))
                             ) : (
-                                <div style={{ opacity: 0.3, fontStyle: 'italic' }}>Shell initialized. Waiting for commands...</div>
+                                <div className="log-empty">Shell ready. Waiting for input...</div>
                             )}
                         </div>
-                        <footer style={{ padding: '0.5rem 1rem', background: 'rgba(255,255,255,0.02)', borderTop: '1px solid var(--glass-border)', textAlign: 'right' }}>
-                            <button onClick={() => setLogs('')} style={{ fontSize: '0.7rem', color: 'var(--text-secondary)', opacity: 0.7 }}>Clear Console</button>
+                        <footer className="log-footer">
+                            <button onClick={() => setLogs('')}>Clear</button>
                         </footer>
                     </div>
                 </div>
             </div>
+
+            <style>{`
+                .executor-grid {
+                    display: grid;
+                    grid-template-columns: 1fr 1.5fr;
+                    gap: 2rem;
+                }
+                .section-title {
+                    font-size: 1.5rem;
+                    font-weight: 700;
+                    margin-bottom: 0.25rem;
+                    color: var(--text-primary);
+                }
+                .form-group {
+                    margin-bottom: 1.25rem;
+                }
+                .input-label {
+                    display: block;
+                    font-size: 0.75rem;
+                    font-weight: 600;
+                    color: var(--text-muted);
+                    text-transform: uppercase;
+                    letter-spacing: 0.05em;
+                    margin-bottom: 0.5rem;
+                    display: flex;
+                    align-items: center;
+                    gap: 6px;
+                }
+                .action-row {
+                    display: flex;
+                    gap: 1rem;
+                    margin-top: 1.5rem;
+                }
+                .btn-primary { flex: 1; justify-content: center; }
+                .rollback-btn {
+                    color: var(--danger);
+                    border-color: rgba(239, 68, 68, 0.2);
+                    background: rgba(239, 68, 68, 0.05);
+                }
+                .rollback-btn:hover {
+                    background: rgba(239, 68, 68, 0.1);
+                    border-color: var(--danger);
+                }
+                
+                /* Log Terminal */
+                .log-card {
+                    padding: 0;
+                    overflow: hidden;
+                    height: 100%;
+                    max-height: 600px;
+                    display: flex;
+                    flex-direction: column;
+                    background: #111; /* Darker than card */
+                    border-color: var(--border-color);
+                }
+                .log-header {
+                    padding: 0.75rem 1.25rem;
+                    border-bottom: 1px solid var(--border-color);
+                    display: flex;
+                    align-items: center;
+                    gap: 0.5rem;
+                    background: rgba(255,255,255,0.02);
+                    font-size: 0.75rem;
+                    font-weight: 600;
+                    color: var(--text-muted);
+                    text-transform: uppercase;
+                }
+                .log-content {
+                    flex: 1;
+                    padding: 1rem;
+                    font-family: var(--font-mono);
+                    font-size: 0.85rem;
+                    color: var(--text-secondary);
+                    overflow-y: auto;
+                }
+                .log-line {
+                    display: flex;
+                    gap: 1rem;
+                    margin-bottom: 0.25rem;
+                    line-height: 1.4;
+                }
+                .line-num {
+                    color: var(--text-muted);
+                    opacity: 0.3;
+                    user-select: none;
+                    min-width: 20px;
+                    text-align: right;
+                }
+                .log-empty {
+                    opacity: 0.3;
+                    font-style: italic;
+                    padding: 1rem;
+                }
+                .log-footer {
+                    padding: 0.5rem 1rem;
+                    border-top: 1px solid var(--border-color);
+                    text-align: right;
+                    background: rgba(255,255,255,0.02);
+                }
+                .log-footer button {
+                    background: none;
+                    border: none;
+                    color: var(--text-muted);
+                    font-size: 0.75rem;
+                    cursor: pointer;
+                }
+                .log-footer button:hover {
+                    color: var(--text-primary);
+                }
+                
+                .text-success { color: var(--success); }
+                .text-danger { color: var(--danger); }
+                .text-warning { color: var(--warning); }
+            `}</style>
         </div>
     );
 };

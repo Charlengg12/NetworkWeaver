@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { LayoutDashboard, Server, Settings, Shield, Activity, LogOut, Cpu, AlertTriangle } from 'lucide-react';
+import { LayoutDashboard, Server, Settings, Shield, Activity, LogOut, Cpu, AlertTriangle, FileText } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 import SidebarItem from './SidebarItem';
 import { apiClient } from '../services/api';
@@ -61,7 +61,8 @@ const Sidebar = () => {
                 <SidebarItem icon={Activity} label="Monitoring" to="/monitoring" />
                 <SidebarItem icon={Shield} label="Security" to="/security" />
                 <SidebarItem icon={Settings} label="Devices" to="/devices" />
-                <SidebarItem icon={Cpu} label="RouterOS" to="/routeros" />
+                <SidebarItem icon={Cpu} label="Configurations" to="/routeros" />
+                <SidebarItem icon={FileText} label="Scripts" to="/scripts" />
             </nav>
 
             <div className="sidebar-footer">

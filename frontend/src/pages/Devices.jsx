@@ -82,7 +82,12 @@ const Devices = () => {
             fetchDevices();
         } catch (err) {
             // Auto-retry with validation skipped if it was a connectivity error (400)
-            if (err.response?.status === 400 && !skipValidation) {
+            // We check if the error message actually indicates validation failure to avoid retrying on other 400s
+            const isValidationError = err.response?.status === 400 &&
+                (typeof err.response?.data?.detail === 'string' &&
+                    err.response.data.detail.includes("Device validation failed"));
+
+            if (isValidationError && !skipValidation) {
                 try {
                     console.log("Connectivity check failed, retrying with validation skipped...");
                     await apiClient.post(`/devices/?validate_connectivity=false`, formData);
@@ -111,18 +116,13 @@ const Devices = () => {
             console.error("Failed to add device", err);
             let errorMessage = "Failed to add device. Please check your inputs and connection.";
 
-            if (err.response?.data?.detail) {
-                const detail = err.response.data.detail;
-                // Handle nested error object from backend
-                if (typeof detail === 'object' && detail.message) {
-                    errorMessage = `${detail.message}: ${detail.errors?.join(', ') || ''}`;
-                    if (detail.suggestion) {
-                        errorMessage += ` ${detail.suggestion}`;
-                    }
-                } else {
-                    errorMessage = detail;
-                }
+            if (!err.response) {
+                errorMessage = "Network Error: Cannot reach backend server. Please check if the backend is running.";
+            } else if (err.response?.data?.detail) {
+                // Backend now returns a simple string for validation errors
+                errorMessage = err.response.data.detail;
             }
+
             setError(errorMessage);
         }
     };

@@ -16,3 +16,28 @@ apiClient.interceptors.request.use((config) => {
     }
     return config;
 });
+
+apiClient.interceptors.response.use(
+    (response) => response,
+    (error) => {
+        if (error.response) {
+            // Server responded with a status code verification
+            if (error.response.status === 401) {
+                // Token expired or invalid
+                localStorage.removeItem('token');
+                // Optional: Redirect to login if not already there
+                if (window.location.pathname !== '/login') {
+                    window.location.href = '/login';
+                }
+            } else if (error.response.status === 503) {
+                console.error('Service Unavailable: Backend might be starting up.');
+            }
+        } else if (error.request) {
+            // The request was made but no response was received
+            console.error('Network Error: No response received from backend.');
+        } else {
+            console.error('Error setup:', error.message);
+        }
+        return Promise.reject(error);
+    }
+);

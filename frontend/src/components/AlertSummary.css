@@ -1,9 +1,9 @@
 .alert-summary {
-    background: var(--secondary-bg);
+    background: var(--bg-card);
     border: 1px solid var(--border-color);
-    border-radius: 12px;
-    padding: 20px;
-    margin-bottom: 20px;
+    border-radius: var(--radius-lg);
+    padding: 1rem;
+    margin-bottom: 0;
 }
 
 .alert-summary.loading {
@@ -31,7 +31,7 @@
     display: flex;
     justify-content: space-between;
     align-items: center;
-    margin-bottom: 15px;
+    margin-bottom: 0.75rem;
 }
 
 .alert-header h3 {
@@ -51,14 +51,14 @@
 .alert-cards {
     display: grid;
     grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
-    gap: 15px;
+    gap: 0.75rem;
 }
 
 .alert-card {
     display: flex;
     align-items: center;
-    gap: 12px;
-    padding: 15px;
+    gap: 10px;
+    padding: 0.75rem 1rem;
     border-radius: 8px;
     transition: transform 0.2s, box-shadow 0.2s;
 }

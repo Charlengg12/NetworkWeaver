@@ -44,5 +44,6 @@ export default defineConfig({
   server: {
     host: true,
     port: 5173,
+    allowedHosts: ['networkweaver-frontend', 'localhost', '127.0.0.1'],
   },
 })

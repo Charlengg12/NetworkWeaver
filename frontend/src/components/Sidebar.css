@@ -1,13 +1,9 @@
 /* Sidebar Container */
 .sidebar {
-    background: var(--bg-secondary);
-    border-right: 1px solid var(--glass-border);
-    backdrop-filter: blur(20px);
-    -webkit-backdrop-filter: blur(20px);
-    display: flex;
-    flex-direction: column;
     height: 100vh;
     width: 260px;
+    flex-shrink: 0;
+    /* Prevent shrinking */
     position: sticky;
     top: 0;
     z-index: 50;
@@ -24,18 +20,14 @@
 }
 
 .app-logo {
-    /* No filter for image logo */
     object-fit: contain;
 }
 
 .app-title {
     font-size: 1.25rem;
-    font-weight: 800;
-    letter-spacing: -0.05em;
-    background: linear-gradient(135deg, #fff 0%, #ccc 100%);
-    background-clip: text;
-    -webkit-background-clip: text;
-    -webkit-text-fill-color: transparent;
+    font-weight: 700;
+    letter-spacing: -0.025em;
+    color: var(--text-primary);
     margin-left: 0.75rem;
 }
 
@@ -53,8 +45,8 @@
     align-items: center;
     gap: 0.75rem;
     padding: 0.75rem 1rem;
-    border-radius: 12px;
-    color: var(--text-secondary);
+    border-radius: var(--radius-md);
+    color: var(--text-muted);
     font-size: 0.9rem;
     font-weight: 500;
     transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
@@ -63,28 +55,27 @@
 }
 
 .sidebar-item:hover {
-    background: rgba(255, 255, 255, 0.03);
+    background: var(--bg-card-hover);
     color: var(--text-primary);
-    transform: translateX(4px);
+    transform: translateX(2px);
 }
 
 .sidebar-item.active {
-    background: rgba(0, 229, 255, 0.1);
-    color: var(--accent-cyan);
-    border: 1px solid rgba(0, 229, 255, 0.2);
-    box-shadow: 0 0 15px rgba(0, 229, 255, 0.1);
+    background: rgba(14, 165, 233, 0.1);
+    color: var(--primary);
+    border: 1px solid rgba(14, 165, 233, 0.2);
+    /* Subtle active indicator */
+    box-shadow: 0 0 15px rgba(14, 165, 233, 0.05);
 }
 
 .sidebar-item.active svg {
-    color: var(--accent-cyan);
-    filter: drop-shadow(0 0 5px rgba(0, 229, 255, 0.4));
+    color: var(--primary);
 }
 
 /* Footer Section */
 .sidebar-footer {
     padding: 1.5rem;
-    border-top: 1px solid var(--glass-border);
-    background: linear-gradient(to top, rgba(0, 0, 0, 0.2), transparent);
+    border-top: 1px solid var(--border-color);
 }
 
 .user-info {
@@ -94,22 +85,21 @@
     margin-bottom: 1rem;
     padding: 0.8rem;
     background: rgba(255, 255, 255, 0.02);
-    border-radius: 12px;
-    border: 1px solid var(--glass-border);
+    border-radius: var(--radius-md);
+    border: 1px solid var(--border-color);
 }
 
 .user-avatar {
     width: 36px;
     height: 36px;
-    border-radius: 10px;
-    background: linear-gradient(135deg, var(--accent-cyan), var(--accent-purple));
+    border-radius: var(--radius-md);
+    background: linear-gradient(135deg, var(--primary), #3b82f6);
     color: #fff;
     display: flex;
     align-items: center;
     justify-content: center;
     font-size: 0.8rem;
     font-weight: 700;
-    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
 }
 
 .user-details {
@@ -133,9 +123,9 @@
 .logout-btn {
     width: 100%;
     padding: 0.75rem;
-    border-radius: 12px;
-    background: rgba(255, 68, 68, 0.1);
-    color: var(--danger-color);
+    border-radius: var(--radius-md);
+    background: rgba(239, 68, 68, 0.1);
+    color: var(--danger);
     display: flex;
     align-items: center;
     justify-content: center;
@@ -144,15 +134,15 @@
     font-weight: 600;
     transition: all 0.2s;
     border: 1px solid transparent;
+    cursor: pointer;
 }
 
 .logout-btn:hover {
-    background: rgba(255, 68, 68, 0.15);
-    border-color: rgba(255, 68, 68, 0.3);
-    transform: translateY(-1px);
+    background: rgba(239, 68, 68, 0.15);
+    border-color: rgba(239, 68, 68, 0.3);
 }
 
-/* Navigation item wrapper for badges */
+/* Alert Badge */
 .nav-item-wrapper {
     position: relative;
     display: flex;
@@ -168,7 +158,7 @@
     right: 10px;
     top: 50%;
     transform: translateY(-50%);
-    background: #ef4444;
+    background: var(--danger);
     color: white;
     font-size: 0.7rem;
     font-weight: 700;

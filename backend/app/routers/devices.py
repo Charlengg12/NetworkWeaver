@@ -34,6 +34,9 @@ def check_ping(host: str, timeout: int = 1) -> tuple[bool, str]:
             return True, "Host is reachable"
         else:
             return False, "Host did not respond to ping"
+    except FileNotFoundError:
+        logger.warning("Ping command not found. Skipping ICMP check.")
+        return True, "Ping skipped (binary missing)"
     except Exception as e:
         return False, f"Ping failed: {str(e)}"
 
@@ -96,15 +99,11 @@ def create_device(
                 validation_errors.append(f"API port check failed: {port_msg}")
                 logger.warning(f"Device {device.name} API port {device.api_port} not accessible")
         
-        # If validation failed, return error with details
         if validation_errors:
+            error_msg = "; ".join(validation_errors)
             raise HTTPException(
                 status_code=400,
-                detail={
-                    "message": "Device validation failed",
-                    "errors": validation_errors,
-                    "suggestion": "Check that the device is powered on, reachable on the network, and has the correct IP address. You can bypass validation by setting validate_connectivity=false."
-                }
+                detail=f"Device validation failed: {error_msg}. Suggestion: Check that the device is powered on, reachable on the network, and has the correct IP address. You can bypass validation by setting validate_connectivity=false."
             )
     
     # Create device

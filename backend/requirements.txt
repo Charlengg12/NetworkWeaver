@@ -7,3 +7,6 @@ routeros-api
 passlib[bcrypt]
 python-multipart
 python-jose[cryptography]
+pytest
+httpx
+prometheus_client

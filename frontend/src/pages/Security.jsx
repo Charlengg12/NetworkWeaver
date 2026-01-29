@@ -5,9 +5,23 @@ import './Security.css';
 
 const Security = () => {
     const [targetUrl, setTargetUrl] = useState('');
-    const [deviceId, setDeviceId] = useState(1); // Default to device 1 for demo
+    const [deviceId, setDeviceId] = useState('');
+    const [devices, setDevices] = useState([]);
     const [status, setStatus] = useState({ type: '', message: '' });
     const [loading, setLoading] = useState(false);
+
+    React.useEffect(() => {
+        const fetchDevices = async () => {
+            try {
+                const res = await apiClient.get('/devices/');
+                setDevices(res.data);
+                if (res.data.length > 0) setDeviceId(res.data[0].id);
+            } catch (error) {
+                console.error("Failed to fetch devices", error);
+            }
+        };
+        fetchDevices();
+    }, []);
 
     const handleDeploy = async (e) => {
         e.preventDefault();
@@ -47,14 +61,17 @@ const Security = () => {
 
                     <form onSubmit={handleDeploy} className="config-form">
                         <div className="form-group">
-                            <label>Router ID</label>
+                            <label>Target Router</label>
                             <select
                                 className="input-field"
                                 value={deviceId}
                                 onChange={(e) => setDeviceId(parseInt(e.target.value))}
+                                required
                             >
-                                <option value={1}>Lab-Router-1-Main</option>
-                                <option value={2}>Lab-Router-2-Branch</option>
+                                {devices.length === 0 && <option value="">Loading devices...</option>}
+                                {devices.map(dev => (
+                                    <option key={dev.id} value={dev.id}>{dev.name} ({dev.ip_address})</option>
+                                ))}
                             </select>
                         </div>
 
