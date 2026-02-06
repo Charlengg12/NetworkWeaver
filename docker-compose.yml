@@ -8,12 +8,18 @@ services:
       - "8000:8000"
     environment:
       - DATABASE_URL=postgresql://user:password@db:5432/networkweaver
+      - SECRET_KEY=${SECRET_KEY:-networkweaver-prod-secret-change-me}
     depends_on:
       - db
     networks:
       - networkweaver-net
     volumes:
       - ./backend:/app
+    deploy:
+      resources:
+        limits:
+          cpus: '1.0'
+          memory: 1G
 
   # Frontend (React + Vite)
   frontend:
@@ -33,6 +39,11 @@ services:
     volumes:
       - ./frontend:/app
       - /app/node_modules
+    deploy:
+      resources:
+        limits:
+          cpus: '0.5'
+          memory: 512M
 
   # Database (PostgreSQL)
   db:
@@ -56,6 +67,11 @@ services:
       - prometheus_data:/prometheus
     ports:
       - "9090:9090"
+    deploy:
+      resources:
+        limits:
+          cpus: '0.5'
+          memory: 1G
     networks:
       - networkweaver-net
 
@@ -68,12 +84,20 @@ services:
       - GF_SECURITY_ADMIN_PASSWORD=admin
       - GF_SECURITY_ALLOW_EMBEDDING=true
       - GF_AUTH_ANONYMOUS_ENABLED=true
-      - GF_AUTH_ANONYMOUS_ORG_ROLE=Viewer
+      - GF_AUTH_ANONYMOUS_ORG_ROLE=Admin
+      - GF_AUTH_ANONYMOUS_ORG_ID=1
+      - GF_SECURITY_COOKIE_SAMESITE=disabled
+      - GF_DASHBOARDS_DEFAULT_HOME_DASHBOARD_PATH=/var/lib/grafana/dashboards/mikrotik.json
     volumes:
       - ./monitoring/grafana/provisioning:/etc/grafana/provisioning
       - ./monitoring/grafana/dashboards:/var/lib/grafana/dashboards
     depends_on:
       - prometheus
+    deploy:
+      resources:
+        limits:
+          cpus: '0.5'
+          memory: 512M
     networks:
       - networkweaver-net
 

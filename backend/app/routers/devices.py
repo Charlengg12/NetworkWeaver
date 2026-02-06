@@ -112,6 +112,17 @@ def create_device(
         db.add(db_device)
         db.commit()
         db.refresh(db_device)
+        
+        # Log the creation
+        new_log = models.ConfigurationLog(
+            device_id=db_device.id,
+            action_type="Device Created",
+            status="Success",
+            details=f"Device '{db_device.name}' ({db_device.ip_address}) added via API"
+        )
+        db.add(new_log)
+        db.commit()
+        
         logger.info(f"Successfully created device {db_device.name} (ID: {db_device.id})")
         return db_device
     except Exception as e:
@@ -175,6 +186,16 @@ def delete_device(device_id: int, db: Session = Depends(get_db)):
     if not db_device:
         raise HTTPException(status_code=404, detail="Device not found")
     db.delete(db_device)
+    
+    # Log the deletion (System event)
+    new_log = models.ConfigurationLog(
+        device_id=None,
+        action_type="Device Deleted",
+        status="Success",
+        details=f"Device '{db_device.name}' ({db_device.ip_address}) removed from system"
+    )
+    db.add(new_log)
+    
     db.commit()
     logger.info(f"Deleted device {db_device.name} (ID: {device_id})")
     return {"message": "Device deleted"}

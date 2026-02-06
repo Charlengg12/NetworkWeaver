@@ -142,3 +142,41 @@ def test_routeros_connection(device: Device, timeout: int = 5) -> tuple[bool, st
         return False, f"Connection error: {str(e)}"
     except Exception as e:
         return False, f"Unknown error: {str(e)}"
+
+def sync_identity(device: Device, db) -> str:
+    """
+    Connect to device, fetch system identity, and update database if changed.
+    Returns the new name if updated, or partial error string if failed.
+    """
+    connection = None
+    try:
+        connection, api = get_routeros_connection(device, retries=1, timeout=5)
+        identity_data = api.get_resource('/system/identity').get()
+        
+        if identity_data and identity_data[0].get('name'):
+            new_name = identity_data[0].get('name')
+            if device.name != new_name:
+                old_name = device.name
+                logger.info(f"Auto-Sync: Renaming {device.ip_address} from '{old_name}' to '{new_name}'")
+                device.name = new_name
+                db.add(device)
+                
+                # Log the sync event
+                from ... import models # Import here to avoid circular deps if any, or just ensure it's available
+                new_log = models.ConfigurationLog(
+                    device_id=device.id,
+                    action_type="Identity Synced",
+                    status="Success",
+                    details=f"Renamed '{old_name}' to '{new_name}' (Auto-Sync)"
+                )
+                db.add(new_log)
+                
+                db.commit()
+                db.refresh(device)
+            return new_name
+    except Exception as e:
+        logger.warning(f"Auto-Sync failed for {device.ip_address}: {e}")
+        return None
+    finally:
+        if connection:
+            connection.disconnect()

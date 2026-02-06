@@ -8,7 +8,7 @@ import Security from './pages/Security';
 import Monitoring from './pages/Monitoring';
 import Login from './pages/Login';
 import Devices from './pages/Devices';
-import ScriptManager from './pages/ScriptManager';
+import Logs from './pages/Logs';
 import { apiClient } from './services/api';
 import RouterOSDeviceList from './components/RouterOS/DeviceList';
 import LoadingSpinner from './components/LoadingSpinner';
@@ -45,7 +45,7 @@ const DashboardHome = () => {
         setStats({ routers: res.data.length, status: 'Healthy' });
       } catch (err) {
         if (err.name === 'AbortError' || err.name === 'CanceledError') return;
-        setStats({ routers: '-', status: 'Backend Offline' });
+        setStats({ routers: '-' });
       } finally {
         setIsLoading(false);
       }
@@ -79,15 +79,7 @@ const DashboardHome = () => {
           <h3 style={{ margin: 0, fontSize: '0.9rem', color: 'var(--text-muted)' }}>Active Routers</h3>
           <p style={{ fontSize: '1.75rem', fontWeight: 'bold', margin: '0.5rem 0 0 0' }}>{stats.routers}</p>
         </div>
-        <div className="card" style={{ height: 'auto' }}>
-          <h3 style={{ margin: 0, fontSize: '0.9rem', color: 'var(--text-muted)' }}>System Status</h3>
-          <p style={{
-            fontSize: '1.75rem',
-            fontWeight: 'bold',
-            margin: '0.5rem 0 0 0',
-            color: stats.status === 'Healthy' ? 'var(--success)' : 'var(--danger)'
-          }}>{stats.status}</p>
-        </div>
+
         <div style={{ gridColumn: '1 / -1' }}>
           <h3 style={{ margin: '0 0 0.75rem 0', fontSize: '1rem' }}>Network Devices</h3>
           <RouterOSDeviceList />
@@ -97,20 +89,67 @@ const DashboardHome = () => {
   );
 };
 
+import { createContext, useContext } from 'react';
+import { X } from 'lucide-react';
+
+const ToastContext = createContext();
+
+export const useToast = () => useContext(ToastContext);
+
+const Toast = ({ message, type, onClose }) => {
+  useEffect(() => {
+    const timer = setTimeout(onClose, 5000);
+    return () => clearTimeout(timer);
+  }, [onClose]);
+
+  return (
+    <div className={`toast toast-${type}`}>
+      <span>{message}</span>
+      <button onClick={onClose} className="toast-close"><X size={14} /></button>
+    </div>
+  );
+};
+
+const ToastProvider = ({ children }) => {
+  const [toasts, setToasts] = useState([]);
+
+  const addToast = (message, type = 'info') => {
+    const id = Date.now();
+    setToasts(prev => [...prev, { id, message, type }]);
+  };
+
+  const removeToast = (id) => {
+    setToasts(prev => prev.filter(t => t.id !== id));
+  };
+
+  return (
+    <ToastContext.Provider value={{ addToast }}>
+      {children}
+      <div className="toast-container">
+        {toasts.map(t => (
+          <Toast key={t.id} message={t.message} type={t.type} onClose={() => removeToast(t.id)} />
+        ))}
+      </div>
+    </ToastContext.Provider>
+  );
+};
+
 function App() {
   return (
-    <Routes>
-      <Route path="/login" element={<Login />} />
+    <ToastProvider>
+      <Routes>
+        <Route path="/login" element={<Login />} />
 
-      <Route element={<ProtectedLayout />}>
-        <Route path="/" element={<DashboardHome />} />
-        <Route path="/security" element={<Security />} />
-        <Route path="/monitoring" element={<Monitoring />} />
-        <Route path="/devices" element={<Devices />} />
-        <Route path="/routeros" element={<RouterOSPage />} />
-        <Route path="/scripts" element={<ScriptManager />} />
-      </Route>
-    </Routes>
+        <Route element={<ProtectedLayout />}>
+          <Route path="/" element={<DashboardHome />} />
+          <Route path="/security" element={<Security />} />
+          <Route path="/monitoring" element={<Monitoring />} />
+          <Route path="/devices" element={<Devices />} />
+          <Route path="/routeros" element={<RouterOSPage />} />
+          <Route path="/logs" element={<Logs />} />
+        </Route>
+      </Routes>
+    </ToastProvider>
   );
 }
 

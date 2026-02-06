@@ -111,7 +111,7 @@
             "uid": "PBFA97CFB590B2093"
           },
           "exemplar": true,
-          "expr": "100 - (avg(irate(windows_cpu_time_total{mode=\"idle\", instance=\"$instance\"}[2m])) * 100)",
+          "expr": "avg(hrProcessorLoad{instance='$instance'})",
           "instant": true,
           "interval": "",
           "legendFormat": "",
@@ -280,7 +280,7 @@
             "uid": "PBFA97CFB590B2093"
           },
           "exemplar": true,
-          "expr": "100 * (1 - windows_os_physical_memory_free_bytes{instance=\"$instance\"} / windows_os_physical_memory_total_bytes{instance=\"$instance\"})",
+          "expr": "(hrStorageUsed{hrStorageIndex='65536',instance='$instance'} * 100 )/(hrStorageSize{hrStorageIndex='65536',instance='$instance'})",
           "instant": true,
           "interval": "",
           "legendFormat": "",
@@ -367,7 +367,7 @@
             "uid": "PBFA97CFB590B2093"
           },
           "exemplar": true,
-          "expr": "100 * (1 - windows_logical_disk_free_bytes{instance=\"$instance\", volume=\"C:\"} / windows_logical_disk_size_bytes{instance=\"$instance\", volume=\"C:\"})",
+          "expr": "(hrStorageUsed{hrStorageIndex='131072',instance='$instance'} * 100 )/(hrStorageSize{hrStorageIndex='131072',instance='$instance'})",
           "instant": true,
           "interval": "",
           "legendFormat": "",
@@ -509,7 +509,7 @@
             "uid": "PBFA97CFB590B2093"
           },
           "exemplar": true,
-          "expr": "routeros_cpu_load_percent",
+          "expr": "avg(hrProcessorLoad{instance='$instance'})",
           "interval": "",
           "legendFormat": "Load CPU {{hrDeviceIndex}} ",
           "refId": "A"
@@ -630,7 +630,7 @@
           },
           "editorMode": "code",
           "exemplar": true,
-          "expr": "routeros_uptime_seconds",
+          "expr": "hrSystemUptime{instance='$instance'}/100",
           "format": "time_series",
           "instant": false,
           "interval": "",
@@ -1326,7 +1326,7 @@
             "uid": "PBFA97CFB590B2093"
           },
           "exemplar": true,
-          "expr": "routeros_cpu_load_percent",
+          "expr": "mtxrHlProcessorFrequency{instance='$instance'}",
           "hide": false,
           "instant": true,
           "interval": "",
@@ -4639,19 +4639,44 @@
       },
       {
         "current": {
-          "text": "",
-          "value": ""
+          "text": "All",
+          "value": "$__all"
         },
         "datasource": {
           "type": "prometheus",
           "uid": "PBFA97CFB590B2093"
         },
-        "definition": "label_values(up,instance)",
-        "includeAll": false,
+        "definition": "label_values(hostname)",
+        "includeAll": true,
+        "label": "Router Identity",
+        "name": "router_name",
+        "options": [],
+        "query": {
+          "query": "label_values(hostname)",
+          "refId": "PrometheusVariableQueryEditor-VariableQuery"
+        },
+        "refresh": 1,
+        "regex": "",
+        "sort": 1,
+        "type": "query"
+      },
+      {
+        "current": {
+          "text": "All",
+          "value": "$__all"
+        },
+        "datasource": {
+          "type": "prometheus",
+          "uid": "PBFA97CFB590B2093"
+        },
+        "definition": "label_values({hostname=~\"$router_name\"}, instance)",
+        "hide": 2,
+        "includeAll": true,
+        "label": "Device IP",
         "name": "instance",
         "options": [],
         "query": {
-          "query": "label_values(up,instance)",
+          "query": "label_values({hostname=~\"$router_name\"}, instance)",
           "refId": "PrometheusVariableQueryEditor-VariableQuery"
         },
         "refresh": 1,
@@ -4825,7 +4850,7 @@
   },
   "timepicker": {},
   "timezone": "browser",
-  "title": "Mikrotik",
-  "uid": "LyX-A_nnk",
+  "title": "Mikrotik Monitoring",
+  "uid": "mikrotik-exporter",
   "version": 1
 }

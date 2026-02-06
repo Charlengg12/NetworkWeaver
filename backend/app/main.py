@@ -11,7 +11,12 @@ from fastapi.middleware.cors import CORSMiddleware
 
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["*"], # In production, replace with specific origins like ["http://localhost:5173"]
+    allow_origins=[
+        "http://localhost:3000",
+        "http://localhost:5173",
+        "http://127.0.0.1:3000",
+    ],
+    allow_origin_regex=r"http://(192\.168\.\d{1,3}\.\d{1,3}|172\.\d{1,3}\.\d{1,3}|10\.\d{1,3}\.\d{1,3})(:\d+)?",
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],
@@ -23,6 +28,9 @@ app.include_router(devices.router)
 app.include_router(routeros.router)
 app.include_router(monitoring.router)
 app.include_router(prometheus_metrics.router)
+from .routers import logs
+app.include_router(logs.router)
+
 # Explicitly import and include scripts router 
 from .routers.routeros import scripts
 app.include_router(scripts.router, prefix="/routeros/scripts")

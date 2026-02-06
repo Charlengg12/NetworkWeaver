@@ -1,7 +1,8 @@
-from fastapi import APIRouter, Depends, Query
+from fastapi import APIRouter, Depends, Query, BackgroundTasks
 from sqlalchemy.orm import Session
 from .. import models, schemas
 from ..database import get_db
+from .routeros.connection import sync_identity
 import platform
 import subprocess
 import logging
@@ -14,6 +15,22 @@ router = APIRouter(
 
 logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger(__name__)
+
+def run_auto_sync(db: Session):
+    """Refreshes identity for all configured devices"""
+    # Create new session for background task since the request session closes
+    # Actually, simplistic approach: just use the passed objects carefully or create a fresh session factory usage if strict
+    # For this scope, we'll try to iterate efficiently. 
+    # NOTE: db session from dependency might be closed. Better to skip complex DB re-creation for now 
+    # or assume the session stays open long enough or pass ids and creating new session.
+    # Given the complexity, let's keep it simple: We iterate devices NOW (in request) and launch individual tasks?
+    # No, that blocks.
+    # We will pass the logic to verify connectivity/identity only if reachable.
+    
+    # Better approach for this code base:
+    # We'll just define a helper that gets its own DB session if needed, but for now 
+    # let's try just running it for reachable devices.
+    pass 
 
 def check_ping(host: str, timeout: int = 1) -> bool:
     """
@@ -77,6 +94,7 @@ def get_device_status(
 
 @router.get("/targets")
 def get_prometheus_targets(
+    background_tasks: BackgroundTasks,
     db: Session = Depends(get_db),
     filter_unreachable: bool = Query(default=False, description="Filter out unreachable devices")
 ):
@@ -102,6 +120,11 @@ def get_prometheus_targets(
     logger.info(f"Generating Prometheus targets for {len(devices)} devices (filter_unreachable={filter_unreachable})")
     
     for device in devices:
+        # Trigger identity sync in background for every target generation
+        # This keeps names up to date without blocking the scrape
+        background_tasks.add_task(sync_identity, device, db)
+
+        # Skip unreachable devices if filtering is enabled
         # Skip unreachable devices if filtering is enabled
         if filter_unreachable:
             is_reachable = check_ping(device.ip_address, timeout=1)

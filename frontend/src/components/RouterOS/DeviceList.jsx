@@ -59,6 +59,10 @@ const RouterOSDeviceList = () => {
         }
     };
 
+
+
+
+
     if (loading) return <div>Loading devices...</div>;
 
     return (
@@ -88,13 +92,15 @@ const RouterOSDeviceList = () => {
                                     )}
                                 </td>
                                 <td>
-                                    <button
-                                        className="btn btn-sm btn-secondary"
-                                        onClick={() => handleTestConnection(device.id)}
-                                        disabled={testingId === device.id}
-                                    >
-                                        {testingId === device.id ? <RefreshCw className="spin" size={16} /> : 'Test Connection'}
-                                    </button>
+                                    <div style={{ display: 'flex', gap: '0.5rem' }}>
+                                        <button
+                                            className="btn btn-sm btn-secondary"
+                                            onClick={() => handleTestConnection(device.id)}
+                                            disabled={testingId === device.id}
+                                        >
+                                            {testingId === device.id ? <RefreshCw className="spin" size={16} /> : 'Test Connection'}
+                                        </button>
+                                    </div>
                                 </td>
                             </tr>
                         ))}

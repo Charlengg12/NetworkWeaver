@@ -62,7 +62,7 @@ const Sidebar = () => {
                 <SidebarItem icon={Shield} label="Security" to="/security" />
                 <SidebarItem icon={Settings} label="Devices" to="/devices" />
                 <SidebarItem icon={Cpu} label="Configurations" to="/routeros" />
-                <SidebarItem icon={FileText} label="Scripts" to="/scripts" />
+                <SidebarItem icon={FileText} label="Logs" to="/logs" />
             </nav>
 
             <div className="sidebar-footer">

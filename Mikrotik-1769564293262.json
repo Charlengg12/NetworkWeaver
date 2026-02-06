@@ -4639,19 +4639,44 @@
       },
       {
         "current": {
-          "text": "",
-          "value": ""
+          "text": "All",
+          "value": "$__all"
         },
         "datasource": {
           "type": "prometheus",
           "uid": "PBFA97CFB590B2093"
         },
-        "definition": "label_values(mtxrInterfaceStatsIndex,instance)",
-        "includeAll": false,
+        "definition": "label_values(hostname)",
+        "includeAll": true,
+        "label": "Router Identity",
+        "name": "router_name",
+        "options": [],
+        "query": {
+          "query": "label_values(hostname)",
+          "refId": "PrometheusVariableQueryEditor-VariableQuery"
+        },
+        "refresh": 1,
+        "regex": "",
+        "sort": 1,
+        "type": "query"
+      },
+      {
+        "current": {
+          "text": "All",
+          "value": "$__all"
+        },
+        "datasource": {
+          "type": "prometheus",
+          "uid": "PBFA97CFB590B2093"
+        },
+        "definition": "label_values({hostname=~\"$router_name\"}, instance)",
+        "hide": 2,
+        "includeAll": true,
+        "label": "Device IP",
         "name": "instance",
         "options": [],
         "query": {
-          "query": "label_values(mtxrInterfaceStatsIndex,instance)",
+          "query": "label_values({hostname=~\"$router_name\"}, instance)",
           "refId": "PrometheusVariableQueryEditor-VariableQuery"
         },
         "refresh": 1,

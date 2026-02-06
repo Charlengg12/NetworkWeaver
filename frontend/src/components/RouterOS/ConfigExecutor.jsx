@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { routerosAPI } from '../../services/routeros/api';
 import { apiClient } from '../../services/api';
 import { Terminal, Play, RotateCcw, Box, Hash, ChevronRight, Zap, RefreshCw } from 'lucide-react';
+import { useToast } from '../../App'; // Import from App where Context is exported
 
 const ConfigExecutor = () => {
     const [devices, setDevices] = useState([]);
@@ -13,6 +14,9 @@ const ConfigExecutor = () => {
     // New State for Templates
     const [template, setTemplate] = useState('custom');
     const [params, setParams] = useState({});
+
+    // Toast Hook
+    const { addToast } = useToast();
 
     useEffect(() => {
         const abortController = new AbortController();
@@ -39,25 +43,135 @@ const ConfigExecutor = () => {
                 template_name: template,
                 params: template === 'custom' ? { command: command } : params
             });
-            setLogs(prev => `[Success] ${new Date().toLocaleTimeString()}: ${res.data.message}\n${prev}`);
+            const msg = res.data.message || 'Configuration applied successfully';
+            setLogs(prev => `[Success] ${new Date().toLocaleTimeString()}: ${msg}\n${prev}`);
+            addToast(`Success: ${msg}`, 'success');
         } catch (error) {
-            setLogs(prev => `[Error] ${new Date().toLocaleTimeString()}: ${error.response?.data?.detail || error.message}\n${prev}`);
+            const errDetails = error.response?.data?.detail || error.message;
+            setLogs(prev => `[Error] ${new Date().toLocaleTimeString()}: ${errDetails}\n${prev}`);
+            addToast(`Error: ${errDetails}`, 'error');
         } finally {
             setLoading(false);
         }
     };
 
     const templates = [
-        { id: 'basic_firewall', name: 'Basic Firewall Setup', fields: ['WAN Interface', 'LAN Interface'] },
-        { id: 'bandwidth_limit', name: 'Bandwidth Limit', fields: ['Target IP', 'Max Upload', 'Max Download'] },
-        { id: 'guest_network', name: 'Guest Network', fields: ['SSID', 'Gateway IP', 'DHCP Range'] },
-        { id: 'port_forwarding', name: 'Port Forwarding', fields: ['Protocol', 'External Port', 'Internal IP', 'Internal Port'] },
-        { id: 'block_website', name: 'Block Website', fields: ['URL'] },
-        { id: 'vpn_setup', name: 'VPN Setup (PPTP)', fields: ['Username', 'Password'] },
-        { id: 'mac_filtering', name: 'MAC Filtering', fields: ['MAC Address', 'Action'] },
-        { id: 'auto_backup', name: 'Auto-Backup', fields: ['Backup Name'] },
-        { id: 'custom', name: 'Custom Command', fields: [] }
+        // Bridge Templates
+        {
+            id: 'bridge_add', category: 'Bridge', name: 'Add Bridge',
+            fields: ['Bridge Name']
+        },
+        {
+            id: 'bridge_add_port', category: 'Bridge', name: 'Add Port to Bridge',
+            fields: ['Bridge Name', 'Interface']
+        },
+        {
+            id: 'bridge_delete', category: 'Bridge', name: 'Delete Bridge',
+            fields: ['Bridge Name']
+        },
+        {
+            id: 'bridge_delete_port', category: 'Bridge', name: 'Delete Port from Bridge',
+            fields: ['Bridge Name', 'Interface']
+        },
+        {
+            id: 'bridge_vlan_add', category: 'Bridge', name: 'Add Bridge VLAN',
+            fields: ['Bridge Name', 'VLAN ID', 'Tagged Ports', 'Untagged Ports']
+        },
+
+        // Wireguard Templates
+        {
+            id: 'wireguard_create', category: 'Wireguard', name: 'Create Wireguard Interface',
+            fields: ['Interface Name', 'Listen Port', 'Private Key (optional)']
+        },
+
+        // IP Templates
+        {
+            id: 'ip_address_add', category: 'IP', name: 'Add IP Address',
+            fields: ['Interface', 'IP Address', 'Network']
+        },
+        {
+            id: 'dhcp_server_add', category: 'IP', name: 'Add DHCP Server',
+            fields: ['Interface', 'Pool Name', 'Address Pool', 'Gateway', 'DNS']
+        },
+        {
+            id: 'dhcp_client_add', category: 'IP', name: 'Add DHCP Client',
+            fields: ['Interface', 'Add Default Route']
+        },
+        {
+            id: 'dns_config', category: 'IP', name: 'DNS Configuration',
+            fields: ['Primary DNS', 'Secondary DNS', 'Allow Remote Requests']
+        },
+        {
+            id: 'route_static_add', category: 'IP', name: 'Add Static Route',
+            fields: ['Destination', 'Gateway', 'Distance']
+        },
+
+        // Dynamic Routing Templates
+        {
+            id: 'ospf_config', category: 'Routing', name: 'OSPF Configuration',
+            fields: ['Router ID', 'Area', 'Networks', 'Redistribute Connected']
+        },
+        {
+            id: 'rip_config', category: 'Routing', name: 'RIP Configuration',
+            fields: ['Networks', 'Redistribute Connected', 'Redistribute Static']
+        },
+        {
+            id: 'bgp_config', category: 'Routing', name: 'BGP Configuration',
+            fields: ['AS Number', 'Router ID', 'Peer AS', 'Peer Address', 'Networks']
+        },
+
+        // Firewall Templates
+        {
+            id: 'firewall_filter_add', category: 'Firewall', name: 'Add Filter Rule',
+            fields: ['Chain', 'Protocol', 'Dst Port', 'Action', 'Src Address', 'Comment']
+        },
+
+        // Services Templates
+        {
+            id: 'service_toggle', category: 'Services', name: 'Enable/Disable Service',
+            fields: ['Service Name', 'State (enable/disable)', 'Port']
+        },
+
+        // NAT Templates
+        {
+            id: 'nat_masquerade', category: 'NAT', name: 'NAT Masquerade',
+            fields: ['Out Interface', 'Src Address']
+        },
+        {
+            id: 'nat_dst', category: 'NAT', name: 'Destination NAT (Port Forward)',
+            fields: ['Protocol', 'Dst Port', 'To Address', 'To Port']
+        },
+
+        // System Templates
+        {
+            id: 'system_identity', category: 'System', name: 'Set System Identity',
+            fields: ['Identity Name']
+        },
+        {
+            id: 'user_add', category: 'System', name: 'Add User',
+            fields: ['Username', 'Password', 'Group']
+        },
+        {
+            id: 'user_remove', category: 'System', name: 'Remove User',
+            fields: ['Username']
+        },
+
+        // Interface Templates
+        {
+            id: 'interface_vlan_add', category: 'Interfaces', name: 'Add VLAN Interface',
+            fields: ['Interface Name', 'VLAN ID', 'Parent Interface']
+        },
+        {
+            id: 'interface_rename', category: 'Interfaces', name: 'Rename Interface',
+            fields: ['Current Name', 'New Name']
+        },
+
+        // Custom Command
+        { id: 'custom', category: 'Custom', name: 'Custom Command', fields: [] }
     ];
+
+    // Group templates by category
+    const templateCategories = [...new Set(templates.map(t => t.category))];
 
     return (
         <div className="config-executor-container fade-in">
@@ -97,7 +211,17 @@ const ConfigExecutor = () => {
                                         setParams({});
                                     }}
                                 >
-                                    {templates.map(t => <option key={t.id} value={t.id}>{t.name}</option>)}
+                                    {templateCategories.map(category => (
+                                        <optgroup key={category} label={category}>
+                                            {templates
+                                                .filter(t => t.category === category)
+                                                .map(t => (
+                                                    <option key={t.id} value={t.id}>
+                                                        {t.name}
+                                                    </option>
+                                                ))}
+                                        </optgroup>
+                                    ))}
                                 </select>
                             </div>
 

@@ -1,65 +1,23 @@
 global:
   scrape_interval: 15s
+  evaluation_interval: 15s
 
 scrape_configs:
-  - job_name: 'prometheus'
-    static_configs:
-      - targets: ['localhost:9090']
-
-  # SNMP Monitoring (Real MikroTik Device)
-  - job_name: 'snmp-devices'
-    scrape_interval: 15s
-    scrape_timeout: 10s
-    static_configs:
-      - targets:
-        - 192.168.137.61:161  # Real MikroTik Router
-        labels:
-          device_type: 'mikrotik'
-          location: 'network'
-    metrics_path: /snmp
-    params:
-      module: [if_mib]
-    relabel_configs:
-      - source_labels: [__address__]
-        target_label: __param_target
-      - source_labels: [__param_target]
-        target_label: instance
-      - target_label: __address__
-        replacement: networkweaver-snmp-exporter:9116
-
-  # Keep backend service discovery for future dynamic targets
-  - job_name: 'snmp-dynamic'
-    scrape_interval: 30s
-    scrape_timeout: 10s  # Reduced to 2s for fast-fail
+  # SNMP Exporter for MikroTik routers (GNS3)
+  - job_name: 'snmp'
+    scrape_interval: 45s
+    scrape_timeout: 30s
+    # HTTP Service Discovery from NetworkWeaver Backend
     http_sd_configs:
-      - url: 'http://backend:8000/monitoring/targets'
+      - url: http://backend:8000/monitoring/targets?filter_unreachable=false
+        refresh_interval: 30s
     metrics_path: /snmp
     params:
-      module: [if_mib]
+      module: [mikrotik]
     relabel_configs:
       - source_labels: [__address__]
         target_label: __param_target
       - source_labels: [__param_target]
         target_label: instance
       - target_label: __address__
-        replacement: networkweaver-snmp-exporter:9116
-
-  # Windows Exporter - Laptop monitoring
-  # Windows Exporter - Laptop monitoring (Disabled - Connection Refused)
-  # - job_name: 'windows-exporter'
-  #   scrape_interval: 15s
-  #   static_configs:
-  #     - targets: ['192.168.68.107:9182']
-  #       labels:
-  #         hostname: 'Laptop-Router'
-  #         device_type: 'windows'
-
-  # RouterOS API Metrics (via Backend)
-  - job_name: 'routeros-api'
-    scrape_interval: 15s
-    scrape_timeout: 10s
-    static_configs:
-      - targets: ['backend:8000']
-        labels:
-          source: 'routeros-api'
-    metrics_path: /metrics
+        replacement: snmp-exporter:9116

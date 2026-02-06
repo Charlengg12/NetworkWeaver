@@ -1,9 +1,7 @@
 import React, { useState } from 'react';
-import ConfigHistory from '../../components/RouterOS/ConfigHistory';
 import ConfigExecutor from '../../components/RouterOS/ConfigExecutor';
 import RouterOSDeviceList from '../../components/RouterOS/DeviceList';
-import ScriptManager from '../../components/RouterOS/ScriptManager';
-import { LayoutGrid, Terminal, FileText, History, Server } from 'lucide-react';
+import { Server, FileCode } from 'lucide-react';
 import './RouterOS.css';
 
 const RouterOSPage = () => {
@@ -11,9 +9,7 @@ const RouterOSPage = () => {
 
     const tabs = [
         { id: 'overview', label: 'Device Status', icon: Server },
-        { id: 'configuration', label: 'Config Executor', icon: Terminal },
-        { id: 'scripts', label: 'Script Manager', icon: FileText },
-        { id: 'history', label: 'History', icon: History },
+        { id: 'templates', label: 'Templates', icon: FileCode },
     ];
 
     return (
@@ -48,21 +44,9 @@ const RouterOSPage = () => {
                         </div>
                     )}
 
-                    {activeTab === 'configuration' && (
+                    {activeTab === 'templates' && (
                         <div className="fade-in">
                             <ConfigExecutor />
-                        </div>
-                    )}
-
-                    {activeTab === 'scripts' && (
-                        <div className="fade-in">
-                            <ScriptManager />
-                        </div>
-                    )}
-
-                    {activeTab === 'history' && (
-                        <div className="fade-in">
-                            <ConfigHistory />
                         </div>
                     )}
                 </div>
