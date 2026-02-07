@@ -5,7 +5,7 @@ This guide covers how to deploy NetworkWeaver on a local machine and connect it 
 ## 📋 Prerequisites
 
 -   **Docker Desktop** (Windows/Mac) or **Docker Engine** (Linux)
--   **GNS3** (for network simulation)
+-   **VMware Workstation** (Player or Pro) + **MikroTik CHR Image**
 -   **Git**
 
 ---
@@ -27,39 +27,26 @@ chmod +x deploy.sh
 
 ---
 
-## 🌐 GNS3 Integration Guide
+## 🌐 VMware CHR Integration Guide
 
-### 1. The "Split Network" Challenge
-Docker containers run in an isolated network (`172.x.x.x`). GNS3 devices typically live on a host adapter (e.g., VMnet8 or Loopback `192.168.137.x`). By default, they **cannot** see each other.
+We now use a direct **VMware Cloud Hosted Router (CHR)** instead of GNS3 for better stability and simpler networking.
 
-### 2. Configuring the Bridge
-To allow the NetworkWeaver container (SNMP Collector) to reach your GNS3 router:
+### 1. Setup the VM
+Follow the detailed steps in **[VMWARE_CHR_SETUP.md](./VMWARE_CHR_SETUP.md)** to:
+1.  Configure the `VMnet8` (NAT) adapter.
+2.  Assign a Static IP (e.g., `192.168.247.2`) to the Router.
 
-1.  **Identify your Host Adapter**:
-    -   Run `ipconfig` (Windows) or `ip addr` (Linux).
-    -   Find the adapter hosting your GNS3 subnet (e.g., `Ethernet 2` or `VMware Network Adapter VMnet8`).
-    -   Note its IP (e.g., `192.168.137.205`).
+### 2. Verify Connectivity
+Ensure your Host PC and Docker containers can reach the VM:
+```bash
+ping 192.168.247.2
+```
 
-2.  **Configure GNS3 Cloud Node**:
-    -   In GNS3, drag a **Cloud** node into your workspace.
-    -   Right-click -> **Configure**.
-    -   Check **"Show special Ethernet interfaces"**.
-    -   Select your adapter (e.g., `Ethernet 2`) and click **Add**.
-    -   Connect this Cloud node to your Router's interface (e.g., `ether1`).
-
-3.  **Configure Router Gateway**:
-    -   Your router needs to know how to reply to the Docker container.
-    -   Set the router's default gateway to your **Host Adapter IP** (`.205`) or the subnet gateway (`.1`).
-    ```bash
-    /ip route add dst-address=0.0.0.0/0 gateway=192.168.137.1
-    ```
-
-4.  **Firewall (Windows Only)**:
-    -   You may need to allow traffic on that specific interface.
-    -   Run as Admin:
-    ```powershell
-    New-NetFirewallRule -DisplayName "Allow-GNS3-Traffic" -Direction Inbound -InterfaceAlias "Ethernet 2" -Action Allow
-    ```
+### 3. Firewall (Windows Only)
+You may need to allow traffic on the virtual adapter:
+```powershell
+New-NetFirewallRule -DisplayName "Allow-VMware-Traffic" -Direction Inbound -InterfaceAlias "VMware Network Adapter VMnet8" -Action Allow
+```
 
 ---
 
@@ -67,7 +54,7 @@ To allow the NetworkWeaver container (SNMP Collector) to reach your GNS3 router:
 
 ### "Context Deadline Exceeded"
 -   **Cause**: The SNMP Collector cannot reach the target device.
--   **Fix**: Follow the [GNS3 Integration Guide](#gns3-integration-guide) above. Ensure Ping works.
+-   **Fix**: Follow the [VMware Integration Guide](#vmware-chr-integration-guide) above. Ensure the VM is running and the IP matches.
 
 ### "Connection Refused" (Backend)
 -   **Cause**: Database is still starting up.

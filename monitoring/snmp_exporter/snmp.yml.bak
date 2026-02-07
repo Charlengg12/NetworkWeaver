@@ -1,0 +1,78 @@
+# SNMP Exporter Configuration for MikroTik
+auths:
+  public_v2:
+    community: public
+    security_level: noAuthNoPriv
+    auth_protocol: MD5
+    priv_protocol: DES
+    version: 2
+
+modules:
+  mikrotik:
+    walk:
+      - 1.3.6.1.2.1.1.3       # sysUpTime
+      - 1.3.6.1.2.1.25.1.1    # hrSystemUptime
+      - 1.3.6.1.2.1.25.3.3.1.2 # hrProcessorLoad
+      - 1.3.6.1.2.1.25.2      # hrStorage
+      - 1.3.6.1.2.1.2         # ifTable
+      - 1.3.6.1.2.1.31.1.1    # ifXTable
+      - 1.3.6.1.4.1.14988.1.1.3 # MikroTik Health
+    metrics:
+      - name: sysUpTime
+        oid: 1.3.6.1.2.1.1.3
+        type: Gauge
+      - name: sysDescr
+        oid: 1.3.6.1.2.1.1.1
+        type: DisplayString
+      - name: hrSystemUptime
+        oid: 1.3.6.1.2.1.25.1.1
+        type: Gauge
+      - name: hrSystemDate
+        oid: 1.3.6.1.2.1.25.1.2
+        type: DisplayString
+      - name: hrProcessorLoad
+        oid: 1.3.6.1.2.1.25.3.3.1.2
+        type: Gauge
+        indexes:
+          - labelname: hrDeviceIndex
+            type: Integer
+      - name: hrStorageSize
+        oid: 1.3.6.1.2.1.25.2.3.1.5
+        type: Gauge
+        indexes:
+          - labelname: hrStorageIndex
+            type: Integer
+      - name: hrStorageUsed
+        oid: 1.3.6.1.2.1.25.2.3.1.6
+        type: Gauge
+        indexes:
+          - labelname: hrStorageIndex
+            type: Integer
+      - name: hrStorageDescr
+        oid: 1.3.6.1.2.1.25.2.3.1.3
+        type: DisplayString
+        indexes:
+          - labelname: hrStorageIndex
+            type: Integer
+      - name: mtxrHlTemperature
+        oid: 1.3.6.1.4.1.14988.1.1.3.10
+        type: Gauge
+      - name: mtxrHlProcessorTemperature
+        oid: 1.3.6.1.4.1.14988.1.1.3.11
+        type: Gauge
+      - name: mtxrHlVoltage
+        oid: 1.3.6.1.4.1.14988.1.1.3.8
+        type: Gauge
+      # Interface metrics
+      - name: ifDescr
+        oid: 1.3.6.1.2.1.2.2.1.2
+        type: DisplayString
+      - name: ifOperStatus
+        oid: 1.3.6.1.2.1.2.2.1.8
+        type: Gauge
+      - name: ifHCInOctets
+        oid: 1.3.6.1.2.1.31.1.1.1.6
+        type: Counter
+      - name: ifHCOutOctets
+        oid: 1.3.6.1.2.1.31.1.1.1.10
+        type: Counter

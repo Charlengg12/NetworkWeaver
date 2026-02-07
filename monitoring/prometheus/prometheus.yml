@@ -1,16 +1,19 @@
-global:
+﻿global:
   scrape_interval: 15s
   evaluation_interval: 15s
 
 scrape_configs:
-  # SNMP Exporter for MikroTik routers (GNS3)
+  # SNMP Exporter for MikroTik routers
   - job_name: 'snmp'
-    scrape_interval: 45s
-    scrape_timeout: 30s
-    # HTTP Service Discovery from NetworkWeaver Backend
-    http_sd_configs:
-      - url: http://backend:8000/monitoring/targets?filter_unreachable=false
-        refresh_interval: 30s
+    scrape_interval: 15s
+    scrape_timeout: 14s
+    # Static target for VMware MikroTik CHR on VMnet8
+    static_configs:
+      - targets:
+          - 192.168.247.2
+        labels:
+          hostname: VMware-Mikrotik-CHR
+          device_id: '26'
     metrics_path: /snmp
     params:
       module: [mikrotik]

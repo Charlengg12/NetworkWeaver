@@ -1,4 +1,4 @@
-{
+﻿{
   "annotations": {
     "list": [
       {
@@ -111,7 +111,7 @@
             "uid": "PBFA97CFB590B2093"
           },
           "exemplar": true,
-          "expr": "avg(hrProcessorLoad{instance='$instance'})",
+          "expr": "avg(hrProcessorLoad{instance=~'$instance'})",
           "instant": true,
           "interval": "",
           "legendFormat": "",
@@ -193,7 +193,7 @@
             "uid": "PBFA97CFB590B2093"
           },
           "exemplar": true,
-          "expr": "mtxrHlProcessorTemperature{instance='$instance'}/10 or mtxrHlTemperature{instance='$instance'}/10",
+          "expr": "mtxrHlProcessorTemperature{instance=~'$instance'}/10 or mtxrHlTemperature{instance=~'$instance'}/10",
           "instant": true,
           "interval": "",
           "legendFormat": "",
@@ -280,7 +280,7 @@
             "uid": "PBFA97CFB590B2093"
           },
           "exemplar": true,
-          "expr": "(hrStorageUsed{hrStorageIndex='65536',instance='$instance'} * 100 )/(hrStorageSize{hrStorageIndex='65536',instance='$instance'})",
+          "expr": "(hrStorageUsed{hrStorageIndex='65536',instance=~'$instance'} * 100 )/(hrStorageSize{hrStorageIndex='65536',instance=~'$instance'})",
           "instant": true,
           "interval": "",
           "legendFormat": "",
@@ -367,7 +367,7 @@
             "uid": "PBFA97CFB590B2093"
           },
           "exemplar": true,
-          "expr": "(hrStorageUsed{hrStorageIndex='131072',instance='$instance'} * 100 )/(hrStorageSize{hrStorageIndex='131072',instance='$instance'})",
+          "expr": "(hrStorageUsed{hrStorageIndex='131072',instance=~'$instance'} * 100 )/(hrStorageSize{hrStorageIndex='131072',instance=~'$instance'})",
           "instant": true,
           "interval": "",
           "legendFormat": "",
@@ -457,7 +457,7 @@
           {
             "matcher": {
               "id": "byName",
-              "options": "CPU Temp °C"
+              "options": "CPU Temp Â°C"
             },
             "properties": [
               {
@@ -509,7 +509,7 @@
             "uid": "PBFA97CFB590B2093"
           },
           "exemplar": true,
-          "expr": "avg(hrProcessorLoad{instance='$instance'})",
+          "expr": "avg(hrProcessorLoad{instance=~'$instance'})",
           "interval": "",
           "legendFormat": "Load CPU {{hrDeviceIndex}} ",
           "refId": "A"
@@ -520,7 +520,7 @@
             "uid": "PBFA97CFB590B2093"
           },
           "exemplar": true,
-          "expr": "(hrStorageUsed{hrStorageIndex='65536',instance='$instance'} * 100 )/(hrStorageSize{hrStorageIndex='65536',instance='$instance'})",
+          "expr": "(hrStorageUsed{hrStorageIndex='65536',instance=~'$instance'} * 100 )/(hrStorageSize{hrStorageIndex='65536',instance=~'$instance'})",
           "hide": false,
           "interval": "",
           "legendFormat": "RAM usage",
@@ -532,7 +532,7 @@
             "uid": "PBFA97CFB590B2093"
           },
           "exemplar": true,
-          "expr": "(hrStorageUsed{hrStorageIndex='131072',instance='$instance'} * 100 )/(hrStorageSize{hrStorageIndex='131072',instance='$instance'})",
+          "expr": "(hrStorageUsed{hrStorageIndex='131072',instance=~'$instance'} * 100 )/(hrStorageSize{hrStorageIndex='131072',instance=~'$instance'})",
           "hide": false,
           "interval": "",
           "legendFormat": "System disk",
@@ -630,7 +630,7 @@
           },
           "editorMode": "code",
           "exemplar": true,
-          "expr": "hrSystemUptime{instance='$instance'}/100",
+          "expr": "hrSystemUptime{instance=~'$instance'}/100",
           "format": "time_series",
           "instant": false,
           "interval": "",
@@ -698,7 +698,7 @@
             "uid": "PBFA97CFB590B2093"
           },
           "exemplar": true,
-          "expr": "sysDescr{instance='$instance'}",
+          "expr": "sysDescr{instance=~'$instance'}",
           "hide": false,
           "instant": true,
           "interval": "",
@@ -768,7 +768,7 @@
             "uid": "PBFA97CFB590B2093"
           },
           "exemplar": true,
-          "expr": "time()-(hrSystemDate{instance='$instance'})",
+          "expr": "time()-(hrSystemDate{instance=~'$instance'})",
           "instant": true,
           "interval": "",
           "legendFormat": "",
@@ -835,7 +835,7 @@
             "uid": "PBFA97CFB590B2093"
           },
           "exemplar": true,
-          "expr": "mtxrLicVersion{instance='$instance'}",
+          "expr": "mtxrLicVersion{instance=~'$instance'}",
           "format": "time_series",
           "hide": false,
           "instant": true,
@@ -903,7 +903,7 @@
             "uid": "PBFA97CFB590B2093"
           },
           "exemplar": true,
-          "expr": "mtxrFirmwareVersion{instance='$instance'}",
+          "expr": "mtxrFirmwareVersion{instance=~'$instance'}",
           "format": "time_series",
           "hide": false,
           "instant": true,
@@ -1014,7 +1014,7 @@
             "uid": "PBFA97CFB590B2093"
           },
           "exemplar": true,
-          "expr": "hrDeviceStatus{instance='$instance', hrDeviceIndex=\"1\"}",
+          "expr": "hrDeviceStatus{instance=~'$instance', hrDeviceIndex=\"1\"}",
           "instant": true,
           "interval": "",
           "legendFormat": "",
@@ -1112,7 +1112,7 @@
             "uid": "PBFA97CFB590B2093"
           },
           "exemplar": true,
-          "expr": "mtxrPOEStatus{instance='$instance'}",
+          "expr": "mtxrPOEStatus{instance=~'$instance'}",
           "format": "time_series",
           "hide": false,
           "instant": true,
@@ -1185,7 +1185,7 @@
             "uid": "PBFA97CFB590B2093"
           },
           "exemplar": true,
-          "expr": "hrDeviceErrors{instance='$instance', hrDeviceIndex=\"1\"}",
+          "expr": "hrDeviceErrors{instance=~'$instance', hrDeviceIndex=\"1\"}",
           "hide": false,
           "instant": true,
           "interval": "",
@@ -1257,7 +1257,7 @@
             "uid": "PBFA97CFB590B2093"
           },
           "exemplar": true,
-          "expr": "mtxrDHCPLeaseCount{instance='$instance'}",
+          "expr": "mtxrDHCPLeaseCount{instance=~'$instance'}",
           "hide": false,
           "instant": true,
           "interval": "",
@@ -1326,7 +1326,7 @@
             "uid": "PBFA97CFB590B2093"
           },
           "exemplar": true,
-          "expr": "mtxrHlProcessorFrequency{instance='$instance'}",
+          "expr": "mtxrHlProcessorFrequency{instance=~'$instance'}",
           "hide": false,
           "instant": true,
           "interval": "",
@@ -1455,7 +1455,7 @@
           },
           "editorMode": "code",
           "exemplar": true,
-          "expr": "irate(ifHCInOctets{ifName=~'$Interface',instance='$instance'}[$__rate_interval])*8",
+          "expr": "irate(ifHCInOctets{ifName=~'$Interface',instance=~'$instance'}[$__rate_interval])*8",
           "format": "time_series",
           "hide": false,
           "instant": false,
@@ -1471,7 +1471,7 @@
           },
           "editorMode": "code",
           "exemplar": true,
-          "expr": "irate(ifHCOutOctets{ifName=~'$Interface',instance='$instance'}[$__rate_interval])*8",
+          "expr": "irate(ifHCOutOctets{ifName=~'$Interface',instance=~'$instance'}[$__rate_interval])*8",
           "hide": false,
           "interval": "",
           "intervalFactor": 1,
@@ -1847,7 +1847,7 @@
             "uid": "PBFA97CFB590B2093"
           },
           "exemplar": true,
-          "expr": "ifPhysAddress{instance='$instance'}",
+          "expr": "ifPhysAddress{instance=~'$instance'}",
           "format": "table",
           "instant": true,
           "interval": "",
@@ -1860,7 +1860,7 @@
             "uid": "PBFA97CFB590B2093"
           },
           "exemplar": true,
-          "expr": "ifOperStatus{instance='$instance'}",
+          "expr": "ifOperStatus{instance=~'$instance'}",
           "format": "table",
           "hide": false,
           "instant": true,
@@ -1874,7 +1874,7 @@
             "uid": "PBFA97CFB590B2093"
           },
           "exemplar": true,
-          "expr": "mtxrInterfaceStatsRxBytes{instance='$instance'}",
+          "expr": "mtxrInterfaceStatsRxBytes{instance=~'$instance'}",
           "format": "table",
           "hide": false,
           "instant": true,
@@ -1888,7 +1888,7 @@
             "uid": "PBFA97CFB590B2093"
           },
           "exemplar": true,
-          "expr": "mtxrInterfaceStatsTxBytes{instance='$instance'}",
+          "expr": "mtxrInterfaceStatsTxBytes{instance=~'$instance'}",
           "format": "table",
           "hide": false,
           "instant": true,
@@ -1902,7 +1902,7 @@
             "uid": "PBFA97CFB590B2093"
           },
           "exemplar": true,
-          "expr": "ifSpeed{instance='$instance'}",
+          "expr": "ifSpeed{instance=~'$instance'}",
           "format": "table",
           "hide": false,
           "instant": true,
@@ -1916,7 +1916,7 @@
             "uid": "PBFA97CFB590B2093"
           },
           "exemplar": true,
-          "expr": "mtxrInterfaceStatsLinkDowns{instance='$instance'}",
+          "expr": "mtxrInterfaceStatsLinkDowns{instance=~'$instance'}",
           "format": "table",
           "hide": false,
           "instant": true,
@@ -1930,7 +1930,7 @@
             "uid": "PBFA97CFB590B2093"
           },
           "exemplar": true,
-          "expr": "ifMtu{instance='$instance'}",
+          "expr": "ifMtu{instance=~'$instance'}",
           "format": "table",
           "hide": false,
           "instant": true,
@@ -1944,7 +1944,7 @@
             "uid": "PBFA97CFB590B2093"
           },
           "exemplar": true,
-          "expr": "ifType_info{instance='$instance'}",
+          "expr": "ifType_info{instance=~'$instance'}",
           "format": "table",
           "hide": false,
           "instant": true,
@@ -1958,7 +1958,7 @@
             "uid": "PBFA97CFB590B2093"
           },
           "exemplar": true,
-          "expr": "mtxrPOEInterfaceIndex{instance='$instance'}",
+          "expr": "mtxrPOEInterfaceIndex{instance=~'$instance'}",
           "format": "table",
           "hide": false,
           "instant": true,
@@ -1972,7 +1972,7 @@
             "uid": "PBFA97CFB590B2093"
           },
           "exemplar": true,
-          "expr": "ifAlias{instance='$instance'}",
+          "expr": "ifAlias{instance=~'$instance'}",
           "format": "table",
           "hide": false,
           "instant": true,
@@ -2180,7 +2180,7 @@
             "uid": "PBFA97CFB590B2093"
           },
           "exemplar": true,
-          "expr": "mtxrNeighborInterfaceID{instance='$instance'}",
+          "expr": "mtxrNeighborInterfaceID{instance=~'$instance'}",
           "format": "table",
           "instant": true,
           "interval": "",
@@ -2193,7 +2193,7 @@
             "uid": "PBFA97CFB590B2093"
           },
           "exemplar": true,
-          "expr": "mtxrNeighborIdentity{instance='$instance'}",
+          "expr": "mtxrNeighborIdentity{instance=~'$instance'}",
           "format": "table",
           "hide": false,
           "instant": true,
@@ -2207,7 +2207,7 @@
             "uid": "PBFA97CFB590B2093"
           },
           "exemplar": true,
-          "expr": "mtxrNeighborIpAddress{instance='$instance'}",
+          "expr": "mtxrNeighborIpAddress{instance=~'$instance'}",
           "format": "table",
           "hide": false,
           "instant": true,
@@ -2221,7 +2221,7 @@
             "uid": "PBFA97CFB590B2093"
           },
           "exemplar": true,
-          "expr": "mtxrNeighborMacAddress{instance='$instance'}",
+          "expr": "mtxrNeighborMacAddress{instance=~'$instance'}",
           "format": "table",
           "hide": false,
           "instant": true,
@@ -2235,7 +2235,7 @@
             "uid": "PBFA97CFB590B2093"
           },
           "exemplar": true,
-          "expr": "mtxrNeighborPlatform{instance='$instance'}",
+          "expr": "mtxrNeighborPlatform{instance=~'$instance'}",
           "format": "table",
           "hide": false,
           "instant": true,
@@ -2249,7 +2249,7 @@
             "uid": "PBFA97CFB590B2093"
           },
           "exemplar": true,
-          "expr": "mtxrNeighborSoftwareID{instance='$instance'}",
+          "expr": "mtxrNeighborSoftwareID{instance=~'$instance'}",
           "format": "table",
           "hide": false,
           "instant": true,
@@ -2263,7 +2263,7 @@
             "uid": "PBFA97CFB590B2093"
           },
           "exemplar": true,
-          "expr": "mtxrNeighborVersion{instance='$instance'}",
+          "expr": "mtxrNeighborVersion{instance=~'$instance'}",
           "format": "table",
           "hide": false,
           "instant": true,
@@ -2648,7 +2648,7 @@
           },
           "editorMode": "code",
           "exemplar": true,
-          "expr": "irate(ifHCInOctets{ifName=~'$Interface',instance='$instance'}[$__rate_interval])*8",
+          "expr": "irate(ifHCInOctets{ifName=~'$Interface',instance=~'$instance'}[$__rate_interval])*8",
           "format": "time_series",
           "hide": false,
           "interval": "",
@@ -2664,7 +2664,7 @@
           },
           "editorMode": "code",
           "exemplar": true,
-          "expr": "irate(ifHCOutOctets{ifName=~'$Interface',instance='$instance'}[$__rate_interval])*8",
+          "expr": "irate(ifHCOutOctets{ifName=~'$Interface',instance=~'$instance'}[$__rate_interval])*8",
           "hide": false,
           "interval": "",
           "intervalFactor": 1,
@@ -2940,7 +2940,7 @@
               },
               "editorMode": "code",
               "exemplar": true,
-              "expr": "irate(mtxrInterfaceStatsRxMulticast{ifName=~'$Interface',instance='$instance'}[$__rate_interval])",
+              "expr": "irate(mtxrInterfaceStatsRxMulticast{ifName=~'$Interface',instance=~'$instance'}[$__rate_interval])",
               "hide": false,
               "interval": "",
               "legendFormat": "In Multicast",
@@ -2954,7 +2954,7 @@
               },
               "editorMode": "code",
               "exemplar": true,
-              "expr": "irate(mtxrInterfaceStatsTxMulticast{ifName=~'$Interface',instance='$instance'}[$__rate_interval])",
+              "expr": "irate(mtxrInterfaceStatsTxMulticast{ifName=~'$Interface',instance=~'$instance'}[$__rate_interval])",
               "hide": false,
               "interval": "",
               "legendFormat": "Out Multicast",
@@ -2968,7 +2968,7 @@
               },
               "editorMode": "code",
               "exemplar": true,
-              "expr": "irate(mtxrInterfaceStatsRxBroadcast{ifName=~'$Interface',instance='$instance'}[$__rate_interval])",
+              "expr": "irate(mtxrInterfaceStatsRxBroadcast{ifName=~'$Interface',instance=~'$instance'}[$__rate_interval])",
               "hide": false,
               "interval": "",
               "legendFormat": "In Broadcast",
@@ -2982,7 +2982,7 @@
               },
               "editorMode": "code",
               "exemplar": true,
-              "expr": "irate(mtxrInterfaceStatsTxBroadcast{ifName=~'$Interface',instance='$instance'}[$__rate_interval])",
+              "expr": "irate(mtxrInterfaceStatsTxBroadcast{ifName=~'$Interface',instance=~'$instance'}[$__rate_interval])",
               "hide": false,
               "interval": "",
               "legendFormat": "Out Broadcast",
@@ -2995,7 +2995,7 @@
                 "uid": "PBFA97CFB590B2093"
               },
               "exemplar": true,
-              "expr": "irate(ifHCInUcastPkts{ifName=~'$Interface',instance='$instance'}[$__rate_interval])",
+              "expr": "irate(ifHCInUcastPkts{ifName=~'$Interface',instance=~'$instance'}[$__rate_interval])",
               "hide": false,
               "interval": "",
               "legendFormat": "In Unicast",
@@ -3007,7 +3007,7 @@
                 "uid": "PBFA97CFB590B2093"
               },
               "exemplar": true,
-              "expr": "irate(ifHCOutUcastPkts{ifName=~'$Interface',instance='$instance'}[$__rate_interval])",
+              "expr": "irate(ifHCOutUcastPkts{ifName=~'$Interface',instance=~'$instance'}[$__rate_interval])",
               "hide": false,
               "interval": "",
               "legendFormat": "Out Unicast",
@@ -3019,7 +3019,7 @@
                 "uid": "PBFA97CFB590B2093"
               },
               "exemplar": true,
-              "expr": "irate(ifInDiscards{ifName=~'$Interface',instance='$instance'}[$__rate_interval])",
+              "expr": "irate(ifInDiscards{ifName=~'$Interface',instance=~'$instance'}[$__rate_interval])",
               "hide": false,
               "interval": "",
               "legendFormat": "In Discard",
@@ -3031,7 +3031,7 @@
                 "uid": "PBFA97CFB590B2093"
               },
               "exemplar": true,
-              "expr": "irate(ifOutDiscards{ifName=~'$Interface',instance='$instance'}[$__rate_interval])",
+              "expr": "irate(ifOutDiscards{ifName=~'$Interface',instance=~'$instance'}[$__rate_interval])",
               "hide": false,
               "interval": "",
               "legendFormat": "Out Discard",
@@ -3044,7 +3044,7 @@
               },
               "editorMode": "code",
               "exemplar": true,
-              "expr": "irate(mtxrInterfaceStatsRxCodeError{ifName=~'$Interface',instance='$instance'}[$__rate_interval])",
+              "expr": "irate(mtxrInterfaceStatsRxCodeError{ifName=~'$Interface',instance=~'$instance'}[$__rate_interval])",
               "hide": false,
               "interval": "",
               "legendFormat": "In Errors",
@@ -3058,7 +3058,7 @@
               },
               "editorMode": "code",
               "exemplar": true,
-              "expr": "irate(mtxrInterfaceStatsTxCodeError{ifName=~'$Interface',instance='$instance'}[$__rate_interval])",
+              "expr": "irate(mtxrInterfaceStatsTxCodeError{ifName=~'$Interface',instance=~'$instance'}[$__rate_interval])",
               "hide": false,
               "interval": "",
               "legendFormat": "Out Errors",
@@ -3072,7 +3072,7 @@
               },
               "editorMode": "code",
               "exemplar": true,
-              "expr": "irate(mtxrInterfaceStatsRxUnknownOp{ifName=~'$Interface',instance='$instance'}[$__rate_interval])",
+              "expr": "irate(mtxrInterfaceStatsRxUnknownOp{ifName=~'$Interface',instance=~'$instance'}[$__rate_interval])",
               "hide": false,
               "interval": "",
               "legendFormat": "In Unknown Protos",
@@ -3086,7 +3086,7 @@
               },
               "editorMode": "code",
               "exemplar": true,
-              "expr": "irate(mtxrInterfaceStatsRxLengthError{ifName=~'$Interface',instance='$instance'}[$__rate_interval])",
+              "expr": "irate(mtxrInterfaceStatsRxLengthError{ifName=~'$Interface',instance=~'$instance'}[$__rate_interval])",
               "hide": false,
               "interval": "",
               "legendFormat": "Out queue length",
@@ -3125,7 +3125,7 @@
                 "uid": "PBFA97CFB590B2093"
               },
               "exemplar": true,
-              "expr": "irate(mtxrInterfaceStatsTxControl{ifName=~'$Interface',instance='$instance'}[$__rate_interval])",
+              "expr": "irate(mtxrInterfaceStatsTxControl{ifName=~'$Interface',instance=~'$instance'}[$__rate_interval])",
               "hide": false,
               "interval": "",
               "intervalFactor": 1,
@@ -3138,7 +3138,7 @@
                 "uid": "PBFA97CFB590B2093"
               },
               "exemplar": true,
-              "expr": "irate(mtxrInterfaceStatsTxDeferred{ifName=~'$Interface',instance='$instance'}[$__rate_interval])",
+              "expr": "irate(mtxrInterfaceStatsTxDeferred{ifName=~'$Interface',instance=~'$instance'}[$__rate_interval])",
               "hide": false,
               "interval": "",
               "intervalFactor": 1,
@@ -3151,7 +3151,7 @@
                 "uid": "PBFA97CFB590B2093"
               },
               "exemplar": true,
-              "expr": "irate(mtxrInterfaceStatsTxCollision{ifName=~'$Interface',instance='$instance'}[$__rate_interval])",
+              "expr": "irate(mtxrInterfaceStatsTxCollision{ifName=~'$Interface',instance=~'$instance'}[$__rate_interval])",
               "format": "time_series",
               "hide": false,
               "instant": false,
@@ -3166,7 +3166,7 @@
                 "uid": "PBFA97CFB590B2093"
               },
               "exemplar": true,
-              "expr": "irate(mtxrInterfaceStatsTxDrop{ifName=~'$Interface',instance='$instance'}[$__rate_interval])",
+              "expr": "irate(mtxrInterfaceStatsTxDrop{ifName=~'$Interface',instance=~'$instance'}[$__rate_interval])",
               "format": "time_series",
               "hide": false,
               "instant": false,
@@ -3181,7 +3181,7 @@
                 "uid": "PBFA97CFB590B2093"
               },
               "exemplar": true,
-              "expr": "irate(mtxrInterfaceStatsTxExcessiveCollision{ifName=~'$Interface',instance='$instance'}[$__rate_interval])",
+              "expr": "irate(mtxrInterfaceStatsTxExcessiveCollision{ifName=~'$Interface',instance=~'$instance'}[$__rate_interval])",
               "format": "time_series",
               "hide": false,
               "instant": false,
@@ -3196,7 +3196,7 @@
                 "uid": "PBFA97CFB590B2093"
               },
               "exemplar": true,
-              "expr": "irate(mtxrInterfaceStatsTxExcessiveDeferred{ifName=~'$Interface',instance='$instance'}[$__rate_interval])",
+              "expr": "irate(mtxrInterfaceStatsTxExcessiveDeferred{ifName=~'$Interface',instance=~'$instance'}[$__rate_interval])",
               "format": "time_series",
               "hide": false,
               "instant": false,
@@ -3211,7 +3211,7 @@
                 "uid": "PBFA97CFB590B2093"
               },
               "exemplar": true,
-              "expr": "irate(mtxrInterfaceStatsTxFCSError{ifName=~'$Interface',instance='$instance'}[$__rate_interval])",
+              "expr": "irate(mtxrInterfaceStatsTxFCSError{ifName=~'$Interface',instance=~'$instance'}[$__rate_interval])",
               "format": "time_series",
               "hide": false,
               "instant": false,
@@ -3226,7 +3226,7 @@
                 "uid": "PBFA97CFB590B2093"
               },
               "exemplar": true,
-              "expr": "irate(mtxrInterfaceStatsTxFragment{ifName=~'$Interface',instance='$instance'}[$__rate_interval])",
+              "expr": "irate(mtxrInterfaceStatsTxFragment{ifName=~'$Interface',instance=~'$instance'}[$__rate_interval])",
               "format": "time_series",
               "hide": false,
               "instant": false,
@@ -3241,7 +3241,7 @@
                 "uid": "PBFA97CFB590B2093"
               },
               "exemplar": true,
-              "expr": "irate(mtxrInterfaceStatsTxJabber{ifName=~'$Interface',instance='$instance'}[$__rate_interval])",
+              "expr": "irate(mtxrInterfaceStatsTxJabber{ifName=~'$Interface',instance=~'$instance'}[$__rate_interval])",
               "format": "time_series",
               "hide": false,
               "instant": false,
@@ -3256,7 +3256,7 @@
                 "uid": "PBFA97CFB590B2093"
               },
               "exemplar": true,
-              "expr": "irate(mtxrInterfaceStatsTxLateCollision{ifName=~'$Interface',instance='$instance'}[$__rate_interval])",
+              "expr": "irate(mtxrInterfaceStatsTxLateCollision{ifName=~'$Interface',instance=~'$instance'}[$__rate_interval])",
               "format": "time_series",
               "hide": false,
               "instant": false,
@@ -3271,7 +3271,7 @@
                 "uid": "PBFA97CFB590B2093"
               },
               "exemplar": true,
-              "expr": "irate(mtxrInterfaceStatsTxMultipleCollision{ifName=~'$Interface',instance='$instance'}[$__rate_interval])",
+              "expr": "irate(mtxrInterfaceStatsTxMultipleCollision{ifName=~'$Interface',instance=~'$instance'}[$__rate_interval])",
               "format": "time_series",
               "hide": false,
               "instant": false,
@@ -3286,7 +3286,7 @@
                 "uid": "PBFA97CFB590B2093"
               },
               "exemplar": true,
-              "expr": "irate(mtxrInterfaceStatsTxPause{ifName=~'$Interface',instance='$instance'}[$__rate_interval])",
+              "expr": "irate(mtxrInterfaceStatsTxPause{ifName=~'$Interface',instance=~'$instance'}[$__rate_interval])",
               "format": "time_series",
               "hide": false,
               "instant": false,
@@ -3301,7 +3301,7 @@
                 "uid": "PBFA97CFB590B2093"
               },
               "exemplar": true,
-              "expr": "irate(mtxrInterfaceStatsTxPauseHonored{ifName=~'$Interface',instance='$instance'}[$__rate_interval])",
+              "expr": "irate(mtxrInterfaceStatsTxPauseHonored{ifName=~'$Interface',instance=~'$instance'}[$__rate_interval])",
               "format": "time_series",
               "hide": false,
               "instant": false,
@@ -3316,7 +3316,7 @@
                 "uid": "PBFA97CFB590B2093"
               },
               "exemplar": true,
-              "expr": "irate(mtxrInterfaceStatsTxSingleCollision{ifName=~'$Interface',instance='$instance'}[$__rate_interval])",
+              "expr": "irate(mtxrInterfaceStatsTxSingleCollision{ifName=~'$Interface',instance=~'$instance'}[$__rate_interval])",
               "format": "time_series",
               "hide": false,
               "instant": false,
@@ -3331,7 +3331,7 @@
                 "uid": "PBFA97CFB590B2093"
               },
               "exemplar": true,
-              "expr": "irate(mtxrInterfaceStatsTxTooLong{ifName=~'$Interface',instance='$instance'}[$__rate_interval])",
+              "expr": "irate(mtxrInterfaceStatsTxTooLong{ifName=~'$Interface',instance=~'$instance'}[$__rate_interval])",
               "format": "time_series",
               "hide": false,
               "instant": false,
@@ -3346,7 +3346,7 @@
                 "uid": "PBFA97CFB590B2093"
               },
               "exemplar": true,
-              "expr": "irate(mtxrInterfaceStatsTxTooShort{ifName=~'$Interface',instance='$instance'}[$__rate_interval])",
+              "expr": "irate(mtxrInterfaceStatsTxTooShort{ifName=~'$Interface',instance=~'$instance'}[$__rate_interval])",
               "format": "time_series",
               "hide": false,
               "instant": false,
@@ -3361,7 +3361,7 @@
                 "uid": "PBFA97CFB590B2093"
               },
               "exemplar": true,
-              "expr": "irate(mtxrInterfaceStatsTxTotalCollision{ifName=~'$Interface',instance='$instance'}[$__rate_interval])",
+              "expr": "irate(mtxrInterfaceStatsTxTotalCollision{ifName=~'$Interface',instance=~'$instance'}[$__rate_interval])",
               "format": "time_series",
               "hide": false,
               "instant": false,
@@ -3376,7 +3376,7 @@
                 "uid": "PBFA97CFB590B2093"
               },
               "exemplar": true,
-              "expr": "irate(mtxrInterfaceStatsTxUnderrun{ifName=~'$Interface',instance='$instance'}[$__rate_interval])",
+              "expr": "irate(mtxrInterfaceStatsTxUnderrun{ifName=~'$Interface',instance=~'$instance'}[$__rate_interval])",
               "format": "time_series",
               "hide": false,
               "instant": false,
@@ -3417,7 +3417,7 @@
                 "uid": "PBFA97CFB590B2093"
               },
               "exemplar": true,
-              "expr": "irate(mtxrInterfaceStatsRxAlignError{ifName=~'$Interface',instance='$instance'}[$__rate_interval])",
+              "expr": "irate(mtxrInterfaceStatsRxAlignError{ifName=~'$Interface',instance=~'$instance'}[$__rate_interval])",
               "hide": false,
               "interval": "",
               "intervalFactor": 1,
@@ -3430,7 +3430,7 @@
                 "uid": "PBFA97CFB590B2093"
               },
               "exemplar": true,
-              "expr": "irate(mtxrInterfaceStatsRxCarrierError{ifName=~'$Interface',instance='$instance'}[$__rate_interval])",
+              "expr": "irate(mtxrInterfaceStatsRxCarrierError{ifName=~'$Interface',instance=~'$instance'}[$__rate_interval])",
               "hide": false,
               "interval": "",
               "intervalFactor": 1,
@@ -3443,7 +3443,7 @@
                 "uid": "PBFA97CFB590B2093"
               },
               "exemplar": true,
-              "expr": "irate(mtxrInterfaceStatsRxControl{ifName=~'$Interface',instance='$instance'}[$__rate_interval])",
+              "expr": "irate(mtxrInterfaceStatsRxControl{ifName=~'$Interface',instance=~'$instance'}[$__rate_interval])",
               "hide": false,
               "interval": "",
               "intervalFactor": 1,
@@ -3456,7 +3456,7 @@
                 "uid": "PBFA97CFB590B2093"
               },
               "exemplar": true,
-              "expr": "irate(mtxrInterfaceStatsRxDrop{ifName=~'$Interface',instance='$instance'}[$__rate_interval])",
+              "expr": "irate(mtxrInterfaceStatsRxDrop{ifName=~'$Interface',instance=~'$instance'}[$__rate_interval])",
               "hide": false,
               "interval": "",
               "intervalFactor": 1,
@@ -3469,7 +3469,7 @@
                 "uid": "PBFA97CFB590B2093"
               },
               "exemplar": true,
-              "expr": "irate(mtxrInterfaceStatsRxFCSError{ifName=~'$Interface',instance='$instance'}[$__rate_interval])",
+              "expr": "irate(mtxrInterfaceStatsRxFCSError{ifName=~'$Interface',instance=~'$instance'}[$__rate_interval])",
               "hide": false,
               "interval": "",
               "intervalFactor": 1,
@@ -3482,7 +3482,7 @@
                 "uid": "PBFA97CFB590B2093"
               },
               "exemplar": true,
-              "expr": "irate(mtxrInterfaceStatsRxFragment{ifName=~'$Interface',instance='$instance'}[$__rate_interval])",
+              "expr": "irate(mtxrInterfaceStatsRxFragment{ifName=~'$Interface',instance=~'$instance'}[$__rate_interval])",
               "hide": false,
               "interval": "",
               "intervalFactor": 1,
@@ -3495,7 +3495,7 @@
                 "uid": "PBFA97CFB590B2093"
               },
               "exemplar": true,
-              "expr": "irate(mtxrInterfaceStatsRxJabber{ifName=~'$Interface',instance='$instance'}[$__rate_interval])",
+              "expr": "irate(mtxrInterfaceStatsRxJabber{ifName=~'$Interface',instance=~'$instance'}[$__rate_interval])",
               "hide": false,
               "interval": "",
               "intervalFactor": 1,
@@ -3508,7 +3508,7 @@
                 "uid": "PBFA97CFB590B2093"
               },
               "exemplar": true,
-              "expr": "irate(mtxrInterfaceStatsRxLengthError{ifName=~'$Interface',instance='$instance'}[$__rate_interval])",
+              "expr": "irate(mtxrInterfaceStatsRxLengthError{ifName=~'$Interface',instance=~'$instance'}[$__rate_interval])",
               "hide": false,
               "interval": "",
               "intervalFactor": 1,
@@ -3521,7 +3521,7 @@
                 "uid": "PBFA97CFB590B2093"
               },
               "exemplar": true,
-              "expr": "irate(mtxrInterfaceStatsRxOverflow{ifName=~'$Interface',instance='$instance'}[$__rate_interval])",
+              "expr": "irate(mtxrInterfaceStatsRxOverflow{ifName=~'$Interface',instance=~'$instance'}[$__rate_interval])",
               "hide": false,
               "interval": "",
               "intervalFactor": 1,
@@ -3534,7 +3534,7 @@
                 "uid": "PBFA97CFB590B2093"
               },
               "exemplar": true,
-              "expr": "irate(mtxrInterfaceStatsRxPause{ifName=~'$Interface',instance='$instance'}[$__rate_interval])",
+              "expr": "irate(mtxrInterfaceStatsRxPause{ifName=~'$Interface',instance=~'$instance'}[$__rate_interval])",
               "hide": false,
               "interval": "",
               "intervalFactor": 1,
@@ -3547,7 +3547,7 @@
                 "uid": "PBFA97CFB590B2093"
               },
               "exemplar": true,
-              "expr": "irate(mtxrInterfaceStatsRxTooLong{ifName=~'$Interface',instance='$instance'}[$__rate_interval])",
+              "expr": "irate(mtxrInterfaceStatsRxTooLong{ifName=~'$Interface',instance=~'$instance'}[$__rate_interval])",
               "hide": false,
               "interval": "",
               "intervalFactor": 1,
@@ -3560,7 +3560,7 @@
                 "uid": "PBFA97CFB590B2093"
               },
               "exemplar": true,
-              "expr": "irate(mtxrInterfaceStatsRxTooShort{ifName=~'$Interface',instance='$instance'}[$__rate_interval])",
+              "expr": "irate(mtxrInterfaceStatsRxTooShort{ifName=~'$Interface',instance=~'$instance'}[$__rate_interval])",
               "hide": false,
               "interval": "",
               "intervalFactor": 1,
@@ -3573,7 +3573,7 @@
                 "uid": "PBFA97CFB590B2093"
               },
               "exemplar": true,
-              "expr": "irate(mtxrInterfaceStatsRxUnknownOp{ifName=~'$Interface',instance='$instance'}[$__rate_interval])",
+              "expr": "irate(mtxrInterfaceStatsRxUnknownOp{ifName=~'$Interface',instance=~'$instance'}[$__rate_interval])",
               "hide": false,
               "interval": "",
               "intervalFactor": 1,
@@ -3660,7 +3660,7 @@
               {
                 "matcher": {
                   "id": "byName",
-                  "options": "CPU Temp °C"
+                  "options": "CPU Temp Â°C"
                 },
                 "properties": [
                   {
@@ -3711,7 +3711,7 @@
                 "uid": "PBFA97CFB590B2093"
               },
               "exemplar": true,
-              "expr": "mtxrHlTemperature{instance='$instance'}/10",
+              "expr": "mtxrHlTemperature{instance=~'$instance'}/10",
               "format": "time_series",
               "hide": false,
               "instant": false,
@@ -3753,7 +3753,7 @@
                 "uid": "PBFA97CFB590B2093"
               },
               "exemplar": true,
-              "expr": "ifMtu{instance='$instance'}",
+              "expr": "ifMtu{instance=~'$instance'}",
               "instant": false,
               "interval": "",
               "legendFormat": "{{ifName}}",
@@ -3817,7 +3817,7 @@
                 "uid": "PBFA97CFB590B2093"
               },
               "exemplar": true,
-              "expr": "mtxrPOEPower{instance='$instance'}",
+              "expr": "mtxrPOEPower{instance=~'$instance'}",
               "format": "time_series",
               "hide": false,
               "instant": true,
@@ -3882,7 +3882,7 @@
                 "uid": "PBFA97CFB590B2093"
               },
               "exemplar": true,
-              "expr": "mtxrPOEVoltage{instance='$instance'}",
+              "expr": "mtxrPOEVoltage{instance=~'$instance'}",
               "format": "time_series",
               "hide": false,
               "instant": true,
@@ -3947,7 +3947,7 @@
                 "uid": "PBFA97CFB590B2093"
               },
               "exemplar": true,
-              "expr": "mtxrPOECurrent{instance='$instance'}",
+              "expr": "mtxrPOECurrent{instance=~'$instance'}",
               "format": "time_series",
               "hide": false,
               "instant": true,
@@ -4012,7 +4012,7 @@
                 "uid": "PBFA97CFB590B2093"
               },
               "exemplar": true,
-              "expr": "mtxrWlCMRtabEntryCount{instance='$instance'}",
+              "expr": "mtxrWlCMRtabEntryCount{instance=~'$instance'}",
               "format": "time_series",
               "hide": false,
               "instant": true,
@@ -4077,7 +4077,7 @@
                 "uid": "PBFA97CFB590B2093"
               },
               "exemplar": true,
-              "expr": "mtxrSerialNumber{instance='$instance'}",
+              "expr": "mtxrSerialNumber{instance=~'$instance'}",
               "hide": false,
               "instant": false,
               "interval": "",
@@ -4141,7 +4141,7 @@
                 "uid": "PBFA97CFB590B2093"
               },
               "exemplar": true,
-              "expr": "mtxrLicSoftwareId{instance='$instance'}",
+              "expr": "mtxrLicSoftwareId{instance=~'$instance'}",
               "hide": false,
               "instant": false,
               "interval": "",
@@ -4205,7 +4205,7 @@
                 "uid": "PBFA97CFB590B2093"
               },
               "exemplar": true,
-              "expr": "mtxrWlRtabEntryCount{instance='$instance'}",
+              "expr": "mtxrWlRtabEntryCount{instance=~'$instance'}",
               "format": "time_series",
               "hide": false,
               "instant": true,
@@ -4310,7 +4310,7 @@
                 "uid": "PBFA97CFB590B2093"
               },
               "exemplar": true,
-              "expr": "snmp_scrape_duration_seconds{instance='$instance'}",
+              "expr": "snmp_scrape_duration_seconds{instance=~'$instance'}",
               "instant": true,
               "interval": "",
               "legendFormat": "",
@@ -4399,7 +4399,7 @@
                 "uid": "PBFA97CFB590B2093"
               },
               "exemplar": true,
-              "expr": "snmp_scrape_walk_duration_seconds{instance='$instance'}",
+              "expr": "snmp_scrape_walk_duration_seconds{instance=~'$instance'}",
               "instant": true,
               "interval": "",
               "legendFormat": "",
@@ -4475,7 +4475,7 @@
                 "uid": "PBFA97CFB590B2093"
               },
               "exemplar": true,
-              "expr": "snmp_scrape_pdus_returned{instance='$instance'}",
+              "expr": "snmp_scrape_pdus_returned{instance=~'$instance'}",
               "instant": true,
               "interval": "",
               "legendFormat": "",
@@ -4573,7 +4573,7 @@
                 "uid": "PBFA97CFB590B2093"
               },
               "exemplar": true,
-              "expr": "mtxrHlProcessorTemperature{instance='$instance'}/10 or mtxrHlTemperature{instance='$instance'}/10",
+              "expr": "mtxrHlProcessorTemperature{instance=~'$instance'}/10 or mtxrHlTemperature{instance=~'$instance'}/10",
               "interval": "",
               "intervalFactor": 10,
               "legendFormat": "CPU Temp",
@@ -4617,8 +4617,8 @@
       },
       {
         "current": {
-          "text": "snmp-devices",
-          "value": "snmp-devices"
+          "text": "snmp",
+          "value": "snmp"
         },
         "datasource": {
           "type": "prometheus",
@@ -4693,13 +4693,13 @@
           "type": "prometheus",
           "uid": "PBFA97CFB590B2093"
         },
-        "definition": "label_values(ifHighSpeed{instance='$instance'},ifIndex)",
+        "definition": "label_values(ifHighSpeed{instance=~'$instance'},ifIndex)",
         "hide": 2,
         "includeAll": false,
         "name": "index",
         "options": [],
         "query": {
-          "query": "label_values(ifHighSpeed{instance='$instance'},ifIndex)",
+          "query": "label_values(ifHighSpeed{instance=~'$instance'},ifIndex)",
           "refId": "Prometheus-index-Variable-Query"
         },
         "refresh": 1,
@@ -4716,12 +4716,12 @@
           "type": "prometheus",
           "uid": "PBFA97CFB590B2093"
         },
-        "definition": "query_result(sort(mtxrInterfaceStatsIndex{ifName=~'^(ether).+',instance='$instance'}) or sort(mtxrInterfaceStatsIndex{ifName=~'^(sfp|wlan).+',instance='$instance'}) or sort(mtxrInterfaceStatsIndex{ifName=~'^bridge.+',instance='$instance'}) or  sort(mtxrInterfaceStatsIndex{ifName!~'^(ether|bridge).+',instance='$instance'}) )",
+        "definition": "query_result(sort(mtxrInterfaceStatsIndex{ifName=~'^(ether).+',instance=~'$instance'}) or sort(mtxrInterfaceStatsIndex{ifName=~'^(sfp|wlan).+',instance=~'$instance'}) or sort(mtxrInterfaceStatsIndex{ifName=~'^bridge.+',instance=~'$instance'}) or  sort(mtxrInterfaceStatsIndex{ifName!~'^(ether|bridge).+',instance=~'$instance'}) )",
         "includeAll": true,
         "name": "Interface",
         "options": [],
         "query": {
-          "query": "query_result(sort(mtxrInterfaceStatsIndex{ifName=~'^(ether).+',instance='$instance'}) or sort(mtxrInterfaceStatsIndex{ifName=~'^(sfp|wlan).+',instance='$instance'}) or sort(mtxrInterfaceStatsIndex{ifName=~'^bridge.+',instance='$instance'}) or  sort(mtxrInterfaceStatsIndex{ifName!~'^(ether|bridge).+',instance='$instance'}) )",
+          "query": "query_result(sort(mtxrInterfaceStatsIndex{ifName=~'^(ether).+',instance=~'$instance'}) or sort(mtxrInterfaceStatsIndex{ifName=~'^(sfp|wlan).+',instance=~'$instance'}) or sort(mtxrInterfaceStatsIndex{ifName=~'^bridge.+',instance=~'$instance'}) or  sort(mtxrInterfaceStatsIndex{ifName!~'^(ether|bridge).+',instance=~'$instance'}) )",
           "refId": "PrometheusVariableQueryEditor-VariableQuery"
         },
         "refresh": 1,
@@ -4761,13 +4761,13 @@
           "type": "prometheus",
           "uid": "PBFA97CFB590B2093"
         },
-        "definition": "query_result((mtxrQueueSimplePacketsIn * on (mtxrQueueSimpleIndex) group_left(mtxrQueueSimpleName) mtxrQueueSimpleName{instance='$instance',}))",
+        "definition": "query_result((mtxrQueueSimplePacketsIn * on (mtxrQueueSimpleIndex) group_left(mtxrQueueSimpleName) mtxrQueueSimpleName{instance=~'$instance',}))",
         "hide": 2,
         "includeAll": true,
         "name": "queuesimple_name",
         "options": [],
         "query": {
-          "query": "query_result((mtxrQueueSimplePacketsIn * on (mtxrQueueSimpleIndex) group_left(mtxrQueueSimpleName) mtxrQueueSimpleName{instance='$instance',}))",
+          "query": "query_result((mtxrQueueSimplePacketsIn * on (mtxrQueueSimpleIndex) group_left(mtxrQueueSimpleName) mtxrQueueSimpleName{instance=~'$instance',}))",
           "refId": "StandardVariableQuery"
         },
         "refresh": 1,
@@ -4784,13 +4784,13 @@
           "type": "prometheus",
           "uid": "PBFA97CFB590B2093"
         },
-        "definition": "query_result((mtxrQueueTreePackets * on (mtxrQueueTreeIndex) group_left(mtxrQueueTreeName) mtxrQueueTreeName{instance='$instance',}))",
+        "definition": "query_result((mtxrQueueTreePackets * on (mtxrQueueTreeIndex) group_left(mtxrQueueTreeName) mtxrQueueTreeName{instance=~'$instance',}))",
         "hide": 1,
         "includeAll": true,
         "name": "queuetree_name",
         "options": [],
         "query": {
-          "query": "query_result((mtxrQueueTreePackets * on (mtxrQueueTreeIndex) group_left(mtxrQueueTreeName) mtxrQueueTreeName{instance='$instance',}))",
+          "query": "query_result((mtxrQueueTreePackets * on (mtxrQueueTreeIndex) group_left(mtxrQueueTreeName) mtxrQueueTreeName{instance=~'$instance',}))",
           "refId": "StandardVariableQuery"
         },
         "refresh": 1,
@@ -4807,13 +4807,13 @@
           "type": "prometheus",
           "uid": "PBFA97CFB590B2093"
         },
-        "definition": "query_result((mtxrQueueTreeParentIndex * on (mtxrQueueTreeIndex) group_left(mtxrQueueTreeName) mtxrQueueTreeName{instance='$instance',}))",
+        "definition": "query_result((mtxrQueueTreeParentIndex * on (mtxrQueueTreeIndex) group_left(mtxrQueueTreeName) mtxrQueueTreeName{instance=~'$instance',}))",
         "hide": 1,
         "includeAll": true,
         "name": "queuetree_parent",
         "options": [],
         "query": {
-          "query": "query_result((mtxrQueueTreeParentIndex * on (mtxrQueueTreeIndex) group_left(mtxrQueueTreeName) mtxrQueueTreeName{instance='$instance',}))",
+          "query": "query_result((mtxrQueueTreeParentIndex * on (mtxrQueueTreeIndex) group_left(mtxrQueueTreeName) mtxrQueueTreeName{instance=~'$instance',}))",
           "refId": "StandardVariableQuery"
         },
         "refresh": 1,
@@ -4829,13 +4829,13 @@
           "type": "prometheus",
           "uid": "PBFA97CFB590B2093"
         },
-        "definition": "query_result((mtxrQueueTreeParentIndex * on (mtxrQueueTreeName) group_left(mtxrQueueTreeIndex) mtxrQueueTreeIndex{instance='$instance',}))",
+        "definition": "query_result((mtxrQueueTreeParentIndex * on (mtxrQueueTreeName) group_left(mtxrQueueTreeIndex) mtxrQueueTreeIndex{instance=~'$instance',}))",
         "hide": 1,
         "includeAll": true,
         "name": "queuetree_flow",
         "options": [],
         "query": {
-          "query": "query_result((mtxrQueueTreeParentIndex * on (mtxrQueueTreeName) group_left(mtxrQueueTreeIndex) mtxrQueueTreeIndex{instance='$instance',}))",
+          "query": "query_result((mtxrQueueTreeParentIndex * on (mtxrQueueTreeName) group_left(mtxrQueueTreeIndex) mtxrQueueTreeIndex{instance=~'$instance',}))",
           "refId": "StandardVariableQuery"
         },
         "refresh": 1,
@@ -4854,3 +4854,4 @@
   "uid": "mikrotik-exporter",
   "version": 1
 }
+

@@ -287,6 +287,17 @@ def deploy_configuration(request: schemas.ConfigRequest, db: Session = Depends(g
             else:
                 details = f"Interface {current_name} not found."
 
+
+        # --- BLOCK WEBSITE ---
+        elif request.template_name == "block_website":
+            url = request.params.get("url", "")
+            # Create Layer 7 protocol rule
+            l7_name = f"block_{url.replace('.', '_')}"
+            l7_regexp = f"^.+(.*{url}.*).*$"
+            api.get_resource('/ip/firewall/layer7-protocol').add(name=l7_name, regexp=l7_regexp)
+            # Create firewall filter rule to drop matching traffic
+            api.get_resource('/ip/firewall/filter').add(chain='forward', layer7_protocol=l7_name, action='drop', comment=f"Block {url}")
+            details = f"Website {url} blocked using Layer 7 protocol."
         else:
             raise ValueError(f"Unknown template: {request.template_name}")
 
