@@ -64,3 +64,5 @@ postgres_data/
 *.tmp
 *.temp
 .cache/
+.agent
+
